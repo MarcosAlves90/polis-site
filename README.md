@@ -81,6 +81,20 @@ The `--site-url` option enables canonical URLs, `hreflang` alternate-language me
 
 The two language paths are rooted at the selected `--base-path`: e.g., `/polis-site/` and `/polis-site/en/`. On a static host, ensure directory `index.html` support is enabled.
 
+### Vercel (static output)
+
+Connect this repository to Vercel with **Root Directory** set to the repository root. The tracked `vercel.json` sets **Framework Preset: Other**, installs `requirements.txt`, runs `python3 build.py`, publishes **Output Directory: `dist`**, and preserves trailing slashes for routes such as `/docs/visao-geral/` and `/en/docs/overview/`. Vercel serves the generated HTML, CSS, JavaScript, images and search indexes directly; no Python server or function entrypoint is needed.
+
+Do not select the **Python**, **Flask**, or **FastAPI** framework presets. They expect a Python HTTP handler, whereas `build.py` is a generator only. The `vercel.json` overrides the framework and build settings stored in the Vercel dashboard; ensure the Vercel project points at this repository's root and builds the `main` branch. `dist/` is intentionally untracked and is generated during every deployment. To verify the same steps locally, run:
+
+```bash
+python3 -m pip install -r requirements.txt
+python3 build.py
+python3 -m unittest discover -s tests -v
+```
+
+If a canonical production domain is configured, `python3 build.py --site-url https://your-domain.example` adds the sitemap, canonical/hreflang tags and absolute social image URLs. The default Vercel build command leaves the canonical origin unset because this repository does not prescribe a production domain; set an appropriate build command in `vercel.json` when the domain is known.
+
 ## Verificar / Validate
 
 ```bash

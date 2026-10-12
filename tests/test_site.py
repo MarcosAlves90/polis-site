@@ -169,6 +169,20 @@ class SiteTests(unittest.TestCase):
         for path in ['index.html','docs/index.html','404.html','assets/styles.css','assets/app.js','assets/favicon.svg','search.json','.nojekyll','robots.txt']:
             self.assertTrue((DIST/path).exists(),path)
 
+    def test_vercel_deploys_static_build_without_python_runtime(self):
+        config = json.loads((ROOT/'vercel.json').read_text(encoding='utf-8'))
+        self.assertIsNone(config['framework'])
+        self.assertEqual(config['installCommand'], 'python3 -m pip install -r requirements.txt')
+        self.assertEqual(config['buildCommand'], 'python3 build.py')
+        self.assertEqual(config['outputDirectory'], 'dist')
+        self.assertTrue(config['trailingSlash'])
+        self.assertNotIn('builds', config)
+        self.assertNotIn('functions', config)
+        for route in ['index.html', 'en/index.html', 'docs/visao-geral/index.html',
+                      'en/docs/overview/index.html', 'assets/app.js', 'assets/og-cover-pt.png',
+                      'en/search.json', '404.html']:
+            self.assertTrue((DIST/route).is_file(), route)
+
     def test_nautical_theme_assets(self):
         for path in ("assets/nautical.css", "assets/cover-art.webp"):
             self.assertTrue((DIST / path).is_file(), path)
