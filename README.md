@@ -9,6 +9,7 @@ A bilingual **Portuguese (Brazil) and English** POLIS documentation site, with t
 - HTML semântico, CSS e JavaScript nativo: sem framework de cliente, API ou infraestrutura de aplicação.
 - Python 3.10+, Jinja2 e markdown-it-py: gera páginas estáticas a partir de Markdown.
 - Dois índices de busca locais, suporte a teclado, alternância de temas, rotas amigáveis e layout responsivo.
+- Tipografia Inter variável incluída no próprio site (WOFF2, Latin/Latin Extended, regular e itálico), com licença SIL Open Font License em `assets/fonts/LICENSE.txt`. Fonte e pesos independem das fontes instaladas em Android, iOS ou desktop; fallbacks locais continuam disponíveis.
 - Saída em `dist/`: compatível com GitHub Pages, Cloudflare Pages, Netlify, Vercel (modo estático) e servidores HTTP convencionais.
 
 ## Executar / Run locally

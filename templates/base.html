@@ -22,6 +22,7 @@
   {% if canonical %}<link rel="canonical" href="{{ canonical }}"><meta property="og:url" content="{{ canonical }}">{% endif %}
   {% if canonical and alternate %}<link rel="alternate" hreflang="{{ 'pt-BR' if lang == 'en' else 'en' }}" href="{{ alternate }}"><link rel="alternate" hreflang="{{ 'en' if lang == 'en' else 'pt-BR' }}" href="{{ canonical }}">{% endif %}
   <link rel="icon" type="image/svg+xml" href="{{ base }}assets/favicon.svg">
+  <link rel="preload" href="{{ base }}assets/fonts/inter-latin-variable.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ base }}assets/styles.css">
   <link rel="stylesheet" href="{{ base }}assets/nautical.css">
   <title>{{ page_title }}</title>

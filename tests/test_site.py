@@ -169,6 +169,30 @@ class SiteTests(unittest.TestCase):
         for path in ['index.html','docs/index.html','404.html','assets/styles.css','assets/app.js','assets/favicon.svg','search.json','.nojekyll','robots.txt']:
             self.assertTrue((DIST/path).exists(),path)
 
+    def test_inter_font_is_self_hosted_for_both_languages(self):
+        fonts = DIST / 'assets' / 'fonts'
+        filenames = [
+            'inter-latin-variable.woff2', 'inter-latin-ext-variable.woff2',
+            'inter-latin-italic-variable.woff2', 'inter-latin-ext-italic-variable.woff2',
+        ]
+        self.assertTrue((fonts/'LICENSE.txt').is_file())
+        css = (DIST/'assets'/'styles.css').read_text(encoding='utf-8')
+        self.assertEqual(css.count('@font-face'), 4)
+        self.assertEqual(css.count('font-display: swap'), 4)
+        self.assertEqual(css.count('font-weight: 100 900'), 4)
+        self.assertIn('--font:Inter,', css)
+        for filename in filenames:
+            self.assertIn(f'url("fonts/{filename}")', css)
+            self.assertTrue((fonts/filename).read_bytes().startswith(b'wOF2'), filename)
+        for file in [DIST/'index.html', DIST/'en'/'index.html',
+                     DIST/'docs'/'visao-geral'/'index.html',
+                     DIST/'en'/'docs'/'overview'/'index.html']:
+            preload = self.soup(file).select_one('link[rel="preload"][as="font"]')
+            self.assertIsNotNone(preload, file)
+            self.assertEqual(preload['href'], '/assets/fonts/inter-latin-variable.woff2', file)
+            self.assertEqual(preload['type'], 'font/woff2', file)
+            self.assertIn('crossorigin', preload.attrs, file)
+
     def test_vercel_deploys_static_build_without_python_runtime(self):
         config = json.loads((ROOT/'vercel.json').read_text(encoding='utf-8'))
         self.assertIsNone(config['framework'])
@@ -199,6 +223,7 @@ class SiteTests(unittest.TestCase):
         page=self.soup(DIST/'docs'/'visao-geral'/'index.html')
         self.assertEqual(page.select_one('link[rel="canonical"]')['href'], 'https://example.com/polis-site/docs/visao-geral/')
         self.assertEqual(page.select_one('link[rel="stylesheet"]')['href'], '/polis-site/assets/styles.css')
+        self.assertEqual(page.select_one('link[rel="preload"][as="font"]')['href'], '/polis-site/assets/fonts/inter-latin-variable.woff2')
         self.assertTrue((DIST/'sitemap.xml').is_file())
         en=self.soup(DIST/'en'/'docs'/'overview'/'index.html')
         self.assertEqual(en.select_one('link[rel="canonical"]')['href'], 'https://example.com/polis-site/en/docs/overview/')
