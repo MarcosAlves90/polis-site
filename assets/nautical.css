@@ -1,7 +1,7 @@
 /*
- * POLIS — identidade náutica, inspirada na capa oficial.
- * Ajuste as cores aqui; estrutura, componentes e responsividade permanecem em styles.css.
- * Este tema não altera a funcionalidade da documentação.
+ * POLIS — nautical identity inspired by the official cover artwork.
+ * Adjust colors here; layout, components, and responsive styles live in styles.css.
+ * This theme does not change documentation behavior.
  */
 :root {
   --bg: #091622;
@@ -14,8 +14,8 @@
   --text: #eee9dc;
   --muted: #b4c0c1;
   --subtle: #8b9ea6;
-  --accent: #dfbc82;           /* latão iluminado */
-  --accent-alt: #80d9ca;       /* farol verde-água */
+  --accent: #dfbc82;           /* illuminated brass */
+  --accent-alt: #80d9ca;       /* sea-green lighthouse accent */
   --accent-ink: #17222a;
   --glow: rgba(215, 166, 102, .14);
   --header: rgba(6, 17, 29, .94);
@@ -32,7 +32,7 @@
   --text: #1b3140;
   --muted: #4b6068;
   --subtle: #61747b;
-  --accent: #865a25;           /* cobre legível em pergaminho */
+  --accent: #865a25;           /* readable copper on parchment */
   --accent-alt: #176d70;
   --accent-ink: #ffffff;
   --glow: rgba(164, 112, 51, .12);
@@ -40,7 +40,7 @@
   --shadow: 0 24px 50px rgba(31, 46, 56, .10);
 }
 
-/* Elementos de navegação: bússola, cartografia e acabamento de latão. */
+/* Navigation details: compass, cartography, and brass finishes. */
 .site-header { box-shadow: 0 1px 0 rgba(222, 188, 130, .06); }
 .brand-mark {
   color: var(--accent);
@@ -77,7 +77,7 @@
   background: var(--accent);
 }
 
-/* A arte original aparece apenas como atmosfera, sem substituir o conteúdo principal. */
+/* Original cover artwork adds atmosphere without obscuring the main content. */
 .hero-section {
   isolation: isolate;
   background: radial-gradient(ellipse at 78% 37%, rgba(31, 99, 109, .22), transparent 55%), var(--bg-deep);
@@ -136,7 +136,7 @@
 :root[data-theme="light"] .hero-section::before { opacity: .11; }
 :root[data-theme="light"] .eyebrow { background: rgba(164, 110, 42, .06); border-color: rgba(143, 92, 36, .25); }
 
-/* Cartas de navegação: pequenas linhas metálicas no lugar do antigo verde neon. */
+/* Nautical charts: fine metallic lines replace the former neon green. */
 .feature-card, .explore-card, .pagination-link, .code-block, .quickstart-code {
   box-shadow: inset 0 1px 0 rgba(231, 206, 157, .035);
 }
@@ -164,7 +164,7 @@
 .quickstart-code { border-color: var(--line); }
 .green-dot { background: var(--accent-alt); }
 
-/* A pequena vinheta final destaca o farol original da capa. */
+/* The closing vignette highlights the lighthouse from the original cover. */
 .closing-card {
   isolation: isolate;
   background: linear-gradient(100deg, var(--panel), var(--panel-2));
@@ -183,7 +183,7 @@
 .closing-decoration { display: none; }
 :root[data-theme="light"] .closing-card::before { opacity: .16; }
 
-/* Documentação mantém a hierarquia original, com acabamentos coerentes com a capa. */
+/* Documentation retains its hierarchy, with details consistent with the cover. */
 .docs-sidebar { background: var(--bg); }
 .nav-section li a.sidebar-active { color: var(--accent); }
 .doc-source-note { border-left: 2px solid var(--accent); }

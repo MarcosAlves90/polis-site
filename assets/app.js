@@ -42,7 +42,7 @@
     body.appendChild(area);
     area.select();
     try {
-      if (!document.execCommand('copy')) throw Error('Cópia indisponível');
+      if (!document.execCommand('copy')) throw Error('Copy unavailable');
     } finally { area.remove(); }
   }
   document.addEventListener('click', async (event) => {

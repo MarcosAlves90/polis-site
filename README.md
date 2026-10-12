@@ -1,18 +1,19 @@
-# POLIS Website — Documentação V6 / V6 Documentation
+# POLIS Documentation Website
 
-Site principal e documentação navegável em **português brasileiro e inglês** para o [POLIS](https://github.com/MarcosAlves90/polis). Mantém a identidade visual náutica do projeto. Independente do repositório da CLI, sem modificar seus contratos.
+A bilingual **Brazilian Portuguese and English** documentation website for
+[POLIS](https://github.com/MarcosAlves90/polis), retaining the project's nautical visual identity.
+This site is maintained independently of the POLIS CLI and does not define or change its protocol contracts.
 
-A bilingual **Portuguese (Brazil) and English** POLIS documentation site, with the original nautical visual identity. Its implementation is independent of the CLI repository and does not modify POLIS protocol contracts.
+## Technology stack
 
-## Tecnologias / Stack
+- Semantic HTML, CSS, and vanilla JavaScript; no client-side framework, application API, or server runtime.
+- Python 3.10+, Jinja2, and markdown-it-py to generate static pages from Markdown.
+- Separate local search indexes for each language, keyboard support, theme switching, clean URLs, and responsive layouts.
+- Self-hosted variable Inter fonts (WOFF2, Latin and Latin Extended, upright and italic) under the
+  SIL Open Font License in `assets/fonts/LICENSE.txt`. Local fallbacks remain available on Android, iOS, and desktop.
+- Static output in `dist/`, suitable for GitHub Pages, Cloudflare Pages, Netlify, Vercel, or conventional HTTP servers.
 
-- HTML semântico, CSS e JavaScript nativo: sem framework de cliente, API ou infraestrutura de aplicação.
-- Python 3.10+, Jinja2 e markdown-it-py: gera páginas estáticas a partir de Markdown.
-- Dois índices de busca locais, suporte a teclado, alternância de temas, rotas amigáveis e layout responsivo.
-- Tipografia Inter variável incluída no próprio site (WOFF2, Latin/Latin Extended, regular e itálico), com licença SIL Open Font License em `assets/fonts/LICENSE.txt`. Fonte e pesos independem das fontes instaladas em Android, iOS ou desktop; fallbacks locais continuam disponíveis.
-- Saída em `dist/`: compatível com GitHub Pages, Cloudflare Pages, Netlify, Vercel (modo estático) e servidores HTTP convencionais.
-
-## Executar / Run locally
+## Run locally
 
 ```bash
 cd polis-site
@@ -23,7 +24,7 @@ python build.py
 python -m http.server 8000 --directory dist
 ```
 
-No Windows PowerShell, ative com `.venv\Scripts\Activate.ps1` antes de executar os comandos `python`. / On Windows PowerShell activate `.venv\Scripts\Activate.ps1` first.
+On Windows PowerShell, activate `.venv\Scripts\Activate.ps1` before running the `python` commands.
 
 - **PT-BR:** `http://localhost:8000/`
 - **English:** `http://localhost:8000/en/`
@@ -32,7 +33,7 @@ No Windows PowerShell, ative com `.venv\Scripts\Activate.ps1` antes de executar 
 
 The header always displays **PT | EN** on both languages, including mobile. The active language is highlighted and both links point to the equivalent translated document, not the language home page. Each language has its own search index (`/search.json` and `/en/search.json`). Portuguese URLs remain unchanged from the previous site version.
 
-## Editar documentação / Maintaining translations
+## Maintain translations
 
 Each article has two Markdown files with **the same filename**:
 
@@ -64,7 +65,7 @@ source: README.md
 
 The command examples, schemas, and normative terminology of the POLIS CLI remain as documented in the V6 source. Changes to machine-level semantics must come from the POLIS Specification, not from this explanatory website.
 
-## Publicar / Static build and hosting
+## Static build and hosting
 
 Root domain:
 
@@ -94,9 +95,12 @@ uv venv .venv && uv pip install --python .venv/bin/python -r requirements.txt
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
+On repeat local runs, skip `uv venv .venv` if the environment already exists, or use
+`uv venv --allow-existing .venv` to preserve it.
+
 If a canonical production domain is configured, `.venv/bin/python build.py --site-url https://your-domain.example` adds the sitemap, canonical/hreflang tags and absolute social image URLs. The default Vercel build command leaves the canonical origin unset because this repository does not prescribe a production domain; set an appropriate build command in `vercel.json` when the domain is known.
 
-## Verificar / Validate
+## Validate
 
 ```bash
 python -m unittest discover -s tests -v
@@ -108,11 +112,21 @@ Tests check both document sets, page links, Markdown HTML safety, navigation, la
 
 GitHub Actions reproduces the isolated `uv` installation and Python build used by Vercel, runs the Python tests and checks JavaScript syntax on pushes and pull requests. The generated `dist/` directory is excluded from Git; rebuild it from the tracked sources when publishing the site.
 
-## Segurança, UX e identidade visual / Security and design
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for English-language documentation and metadata conventions, how to
+maintain both localized versions of a page, and the required Conventional Commits and pull request format.
+GitHub Actions checks new commit subjects and pull request titles and descriptions. The optional local
+commit-message hook applies the same subject check before a commit is created.
+
+## Security, accessibility, and visual design
 
 - HTML semantic structure, skip links, keyboard focus, `/` or `Ctrl/Cmd+K` for search, Esc to close, remembered light/dark theme, and reduced-motion styles.
 - Search works when the static files are served over HTTP; opening the files using `file://` may block `fetch` of the local search index.
 - No remote search provider, analytics dependency, user accounts, database, or third-party hosted fonts are required.
 - The original nautical cover is optimized as `assets/cover-art.webp`, used as a subtle decorative hero/background element and as the source of the localized OG images. The colors draw on deep ocean blue, stone, brass, and lighthouse teal.
 
-**Fonte / Source:** POLIS V6 README, `docs/usage.md`, `docs/installation.md`, `spec/POLIS-SPEC-v6.md`, `spec/POLIS-OFFLINE.md`. The official [V6 Specification](https://github.com/MarcosAlves90/polis/blob/main/spec/POLIS-SPEC-v6.md) is authoritative whenever this website and the normative specification differ. The POLIS repository was consulted for the original site on October 12, 2026.
+**Sources:** POLIS V6 README, `docs/usage.md`, `docs/installation.md`, `spec/POLIS-SPEC-v6.md`, and
+`spec/POLIS-OFFLINE.md`. The official [V6 Specification](https://github.com/MarcosAlves90/polis/blob/main/spec/POLIS-SPEC-v6.md)
+is authoritative whenever this website and the normative specification differ. The POLIS repository was
+consulted for the original site on October 12, 2026.

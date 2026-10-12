@@ -1,4 +1,8 @@
-"""Navigation groups and localized interface strings. Keep translation keys in sync."""
+"""Navigation groups and localized interface strings. Keep translation keys in sync.
+
+Group identifiers match Markdown frontmatter and must remain stable across locales.
+GROUP_LABELS provides the localized display names.
+"""
 
 GROUPS = ['Comece aqui', 'Fluxo de entrega', 'Conceitos e segurança', 'Referência', 'Projeto']
 

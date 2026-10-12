@@ -26,7 +26,7 @@ Report the observed behavior, source revision/version, reproduction steps, expec
 
 The site is designed for small, independently maintainable changes:
 
-1. Create or edit a Portuguese Markdown file in `content/` and its English counterpart in `content/en/`, with matching filenames and `title`, `description`, `group`, `order`, and `source` frontmatter.
+1. Create or edit a Portuguese Markdown file in `content/` and its English counterpart in `content/en/`, keeping the filenames and `group`, `order`, and `source` values in sync. Localize `title` and `description`, and define the English URL with the counterpart's `slug`.
 2. Write sections in Markdown and reference the relevant official source. Use English-language route names when linking from translated content.
 3. Run `python build.py` to generate static pages and language-specific indexes in `dist/`.
 4. Run tests and review routes, search, responsive behavior, and alignment with the POLIS repository.
