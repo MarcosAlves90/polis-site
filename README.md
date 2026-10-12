@@ -83,17 +83,17 @@ The two language paths are rooted at the selected `--base-path`: e.g., `/polis-s
 
 ### Vercel (static output)
 
-Connect this repository to Vercel with **Root Directory** set to the repository root. The tracked `vercel.json` sets **Framework Preset: Other**, installs `requirements.txt`, runs `python3 build.py`, publishes **Output Directory: `dist`**, and preserves trailing slashes for routes such as `/docs/visao-geral/` and `/en/docs/overview/`. Vercel serves the generated HTML, CSS, JavaScript, images and search indexes directly; no Python server or function entrypoint is needed.
+Connect this repository to Vercel with **Root Directory** set to the repository root. The tracked `vercel.json` sets **Framework Preset: Other**, creates `.venv` with `uv`, installs `requirements.txt` into that environment, runs `.venv/bin/python build.py`, publishes **Output Directory: `dist`**, and preserves trailing slashes for routes such as `/docs/visao-geral/` and `/en/docs/overview/`. Vercel serves the generated HTML, CSS, JavaScript, images and search indexes directly; no Python server or function entrypoint is needed.
 
-Do not select the **Python**, **Flask**, or **FastAPI** framework presets. They expect a Python HTTP handler, whereas `build.py` is a generator only. The `vercel.json` overrides the framework and build settings stored in the Vercel dashboard; ensure the Vercel project points at this repository's root and builds the `main` branch. `dist/` is intentionally untracked and is generated during every deployment. To verify the same steps locally, run:
+Do not select the **Python**, **Flask**, or **FastAPI** framework presets. They expect a Python HTTP handler, whereas `build.py` is a generator only. The `vercel.json` overrides the framework and build settings stored in the Vercel dashboard; ensure the Vercel project points at this repository's root and builds the `main` branch. The previous global `python3 -m pip install` failed on Vercel with PEP 668 `externally-managed-environment`: its Python interpreter is managed by `uv`. Installing packages into `.venv` prevents that failure without overriding the managed interpreter. Both `dist/` and `.venv/` are intentionally untracked. To verify the same Vercel steps locally (requires `uv`), run from the repository root:
 
 ```bash
-python3 -m pip install -r requirements.txt
-python3 build.py
-python3 -m unittest discover -s tests -v
+uv venv .venv && uv pip install --python .venv/bin/python -r requirements.txt
+.venv/bin/python build.py
+.venv/bin/python -m unittest discover -s tests -v
 ```
 
-If a canonical production domain is configured, `python3 build.py --site-url https://your-domain.example` adds the sitemap, canonical/hreflang tags and absolute social image URLs. The default Vercel build command leaves the canonical origin unset because this repository does not prescribe a production domain; set an appropriate build command in `vercel.json` when the domain is known.
+If a canonical production domain is configured, `.venv/bin/python build.py --site-url https://your-domain.example` adds the sitemap, canonical/hreflang tags and absolute social image URLs. The default Vercel build command leaves the canonical origin unset because this repository does not prescribe a production domain; set an appropriate build command in `vercel.json` when the domain is known.
 
 ## Verificar / Validate
 
@@ -105,7 +105,7 @@ node --check assets/app.js  # optional: requires Node.js
 
 Tests check both document sets, page links, Markdown HTML safety, navigation, language counterparts, two search indexes, per-language metadata, source links, and subdirectory deployment. Review visual behavior in a browser before deployment.
 
-GitHub Actions runs the Python tests, static build, and JavaScript syntax check on pushes and pull requests. The generated `dist/` directory is excluded from Git; rebuild it from the tracked sources when publishing the site.
+GitHub Actions reproduces the isolated `uv` installation and Python build used by Vercel, runs the Python tests and checks JavaScript syntax on pushes and pull requests. The generated `dist/` directory is excluded from Git; rebuild it from the tracked sources when publishing the site.
 
 ## Segurança, UX e identidade visual / Security and design
 

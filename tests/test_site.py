@@ -172,8 +172,8 @@ class SiteTests(unittest.TestCase):
     def test_vercel_deploys_static_build_without_python_runtime(self):
         config = json.loads((ROOT/'vercel.json').read_text(encoding='utf-8'))
         self.assertIsNone(config['framework'])
-        self.assertEqual(config['installCommand'], 'python3 -m pip install -r requirements.txt')
-        self.assertEqual(config['buildCommand'], 'python3 build.py')
+        self.assertEqual(config['installCommand'], 'uv venv .venv && uv pip install --python .venv/bin/python -r requirements.txt')
+        self.assertEqual(config['buildCommand'], '.venv/bin/python build.py')
         self.assertEqual(config['outputDirectory'], 'dist')
         self.assertTrue(config['trailingSlash'])
         self.assertNotIn('builds', config)
