@@ -149,6 +149,17 @@ class SiteTests(unittest.TestCase):
         self.assertTrue(any('preflight' in item['text'].lower() for item in index))
         self.assertTrue(any(item['title'] == 'Overview' for item in index))
 
+    def test_search_input_exposes_combobox_semantics(self):
+        for file in [DIST/'index.html', DIST/'en'/'index.html', self.pages[0], self.english_pages[0]]:
+            soup = self.soup(file)
+            search = soup.select_one('#site-search')
+            results = soup.select_one('#search-results')
+            self.assertEqual(search['role'], 'combobox', file)
+            self.assertEqual(search['aria-autocomplete'], 'list', file)
+            self.assertEqual(search['aria-controls'], results['id'], file)
+            self.assertEqual(search['aria-expanded'], 'false', file)
+            self.assertEqual(results['role'], 'listbox', file)
+
     def test_markdown_does_not_render_unsafe_html(self):
         markup,_=markdown_renderer('<script>alert(1)</script>\n\n[run](javascript:alert(1))\n\n## Header')
         self.assertNotIn('<script>',markup)

@@ -53,7 +53,7 @@ source: README.md
 ---
 ```
 
-- `title`, `description`, `group`, `order` and `source` are required. `slug` is optional and controls the localized URL; when omitted it uses the filename. Use the same **group ID** across both languages; translated group labels live in `i18n.py`.
+- `title`, `description`, `group` and `order` are required. `source` defaults to `README.md` and `slug` defaults to the filename; `slug` controls the localized URL. Use the same **group ID** across both languages; translated group labels live in `i18n.py`.
 - When adding a page, create both language files with matching filenames. The build rejects missing counterparts or duplicate URL slugs, preventing broken language switches.
 - Write internal links in the language of the target page, for example English `../installation/` rather than `../instalacao/`.
 - `build.py` generates navigation, adjacent-page links, headings, search indexes, page URLs and language counterparts.
@@ -90,6 +90,8 @@ node --check assets/app.js  # optional: requires Node.js
 ```
 
 Tests check both document sets, page links, Markdown HTML safety, navigation, language counterparts, two search indexes, per-language metadata, source links, and subdirectory deployment. Review visual behavior in a browser before deployment.
+
+GitHub Actions runs the Python tests, static build, and JavaScript syntax check on pushes and pull requests. The generated `dist/` directory is excluded from Git; rebuild it from the tracked sources when publishing the site.
 
 ## Segurança, UX e identidade visual / Security and design
 

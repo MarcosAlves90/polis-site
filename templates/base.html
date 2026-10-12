@@ -60,7 +60,7 @@
   <div class="search-overlay" data-search-overlay hidden>
     <div class="search-backdrop" data-close-search></div>
     <section class="search-dialog" role="dialog" aria-modal="true" aria-label="{{ui.search_label}}">
-      <div class="search-input-wrap"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input type="search" id="site-search" placeholder="{{ui.search_placeholder}}" autocomplete="off" aria-label="{{ui.search_label}}"><button type="button" class="search-escape" data-close-search>ESC</button></div>
+      <div class="search-input-wrap"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input type="search" id="site-search" role="combobox" aria-autocomplete="list" aria-controls="search-results" aria-expanded="false" placeholder="{{ui.search_placeholder}}" autocomplete="off" aria-label="{{ui.search_label}}"><button type="button" class="search-escape" data-close-search>ESC</button></div>
       <div class="search-results" id="search-results" role="listbox"><div class="search-empty">{{ui.search_empty}}</div></div>
       <div class="search-dialog-footer"><span><kbd>↑</kbd> <kbd>↓</kbd> {{ui.navigate}} <kbd>↵</kbd> {{ui.open}}</span><span>POLIS V6</span></div>
     </section>

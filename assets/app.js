@@ -67,24 +67,34 @@
   const sidebar = $('#docs-sidebar');
   const navOverlay = $('[data-nav-overlay]');
   const navTrigger = $('[data-open-nav]');
-  function closeNav() {
+  const mobileNavQuery = window.matchMedia('(max-width: 760px)');
+  const isMobileNav = () => mobileNavQuery.matches;
+  function closeNav(restoreFocus = false) {
     if (!sidebar) return;
+    const wasOpen = body.classList.contains('nav-open');
     body.classList.remove('nav-open');
-    navOverlay.hidden = true;
+    if (navOverlay) navOverlay.hidden = true;
     navTrigger?.setAttribute('aria-expanded', 'false');
+    sidebar.inert = isMobileNav();
+    if (restoreFocus && wasOpen && isMobileNav()) navTrigger?.focus();
   }
   function openNav() {
-    if (!sidebar) return;
+    if (!sidebar || !isMobileNav()) return;
+    sidebar.inert = false;
     body.classList.add('nav-open');
-    navOverlay.hidden = false;
+    if (navOverlay) navOverlay.hidden = false;
     navTrigger?.setAttribute('aria-expanded', 'true');
-    $('[data-close-nav]')?.focus();
+    $('[data-close-nav]', sidebar)?.focus();
   }
-  navTrigger?.addEventListener('click', () => body.classList.contains('nav-open') ? closeNav() : openNav());
-  $('[data-close-nav]')?.addEventListener('click', () => { closeNav(); navTrigger?.focus(); });
-  navOverlay?.addEventListener('click', closeNav);
-  $$('.docs-sidebar a').forEach(link => link.addEventListener('click', closeNav));
-  window.addEventListener('resize', () => { if (window.innerWidth > 760) closeNav(); });
+  if (sidebar) sidebar.inert = isMobileNav();
+  navTrigger?.addEventListener('click', () => body.classList.contains('nav-open') ? closeNav(true) : openNav());
+  $('[data-close-nav]', sidebar)?.addEventListener('click', () => closeNav(true));
+  navOverlay?.addEventListener('click', () => closeNav(true));
+  $$('.docs-sidebar a').forEach(link => link.addEventListener('click', () => closeNav()));
+  window.addEventListener('resize', () => {
+    if (!isMobileNav()) closeNav();
+    else if (sidebar && !body.classList.contains('nav-open')) sidebar.inert = true;
+  });
 
   // Search uses a lightweight generated index (built from every Markdown page).
   const overlay = $('[data-search-overlay]');
@@ -116,6 +126,8 @@
     results.replaceChildren();
     currentResults = !terms.length || !index ? [] : index.map(item => ({ ...item, score: score(item, terms) })).filter(x => x.score > 0).sort((a,b) => b.score-a.score || a.title.localeCompare(b.title)).slice(0,9);
     selectedIndex = 0;
+    input.setAttribute('aria-expanded', overlay && !overlay.hidden ? 'true' : 'false');
+    input.removeAttribute('aria-activedescendant');
     if (!currentResults.length) {
       const empty = document.createElement('div');
       empty.className = 'search-empty';
@@ -126,6 +138,7 @@
     for (let i = 0; i < currentResults.length; i++) {
       const item = currentResults[i];
       const a = document.createElement('a');
+      a.id = `search-result-${i}`;
       a.href = item.url;
       a.className = 'search-result' + (i === selectedIndex ? ' selected' : '');
       a.setAttribute('role', 'option');
@@ -138,6 +151,7 @@
       a.addEventListener('mouseenter', () => selectResult(i));
       results.append(a);
     }
+    input.setAttribute('aria-activedescendant', 'search-result-0');
   }
   function selectResult(next) {
     const links = $$('.search-result', results);
@@ -147,11 +161,13 @@
       link.classList.toggle('selected', i === selectedIndex);
       link.setAttribute('aria-selected', i === selectedIndex ? 'true' : 'false');
     });
+    input.setAttribute('aria-activedescendant', links[selectedIndex].id);
     links[selectedIndex].scrollIntoView({ block: 'nearest' });
   }
   async function openSearch() {
     if (!overlay || !overlay.hidden) return;
-    opener = document.activeElement;
+    opener = body.classList.contains('nav-open') ? navTrigger : document.activeElement;
+    if (body.classList.contains('nav-open')) closeNav();
     overlay.hidden = false;
     body.classList.add('modal-open');
     input.value = '';
@@ -175,6 +191,8 @@
     if (!overlay || overlay.hidden) return;
     overlay.hidden = true;
     body.classList.remove('modal-open');
+    input.setAttribute('aria-expanded', 'false');
+    input.removeAttribute('aria-activedescendant');
     if (opener instanceof HTMLElement) opener.focus();
   }
   $$('[data-open-search]').forEach(x => x.addEventListener('click', openSearch));
@@ -186,7 +204,7 @@
     if (e.key === 'Enter' && currentResults.length) { e.preventDefault(); location.href = currentResults[selectedIndex].url; }
   });
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { if (!overlay.hidden) closeSearch(); else if (body.classList.contains('nav-open')) closeNav(); return; }
+    if (e.key === 'Escape') { if (!overlay.hidden) closeSearch(); else if (body.classList.contains('nav-open')) closeNav(true); return; }
     if ((e.key === '/' && !e.ctrlKey && !e.metaKey) || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k')) {
       if (e.target.closest('input,textarea,[contenteditable="true"]')) return;
       e.preventDefault();
@@ -194,6 +212,12 @@
     }
     if (e.key === 'Tab' && overlay && !overlay.hidden) {
       const focusable = $$('input,button,a[href]', overlay).filter(el => el.offsetParent !== null);
+      if (!focusable.length) return;
+      const first = focusable[0], last = focusable[focusable.length-1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    } else if (e.key === 'Tab' && body.classList.contains('nav-open') && sidebar) {
+      const focusable = $$('button,a[href]', sidebar).filter(el => el.offsetParent !== null);
       if (!focusable.length) return;
       const first = focusable[0], last = focusable[focusable.length-1];
       if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
