@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="mobile-nav-overlay" data-nav-overlay hidden></div>
+<div class="docs-shell">
+  <aside class="docs-sidebar" id="docs-sidebar" aria-label="{{ui.sidebar_nav}}">
+    <div class="sidebar-inner"><div class="sidebar-top"><span>{{ui.nav_heading}}</span><button type="button" class="icon-button sidebar-close" data-close-nav aria-label="{{ui.close_nav}}">✕</button></div>
+      {% for group in groups %}<div class="nav-section"><div class="nav-section-label">{{labels[group]}}</div><ul>{% for item in pages if item.group == group %}<li><a href="{{item.href}}" {% if item.slug == page.slug %}class="sidebar-active" aria-current="page"{% endif %}>{{item.title}}</a></li>{% endfor %}</ul></div>{% endfor %}
+      <div class="sidebar-bottom"><span class="sidebar-status"><i></i> POLIS V6</span><a href="{{repo}}" target="_blank" rel="noopener noreferrer">{{ui.source_code}}</a></div>
+    </div>
+  </aside>
+  <main id="main" class="doc-main"><div class="doc-content">
+    <div class="breadcrumbs"><a href="{{lang_home}}">{{ui.home}}</a><span aria-hidden="true">/</span><a href="{{doc_href("visao-geral")}}">Docs</a><span aria-hidden="true">/</span><span>{{page.title}}</span></div>
+    <div class="doc-eyebrow">{{labels[page.group]}} <span class="eyebrow-dot">·</span> POLIS V6</div>
+    <h1>{{page.title}}</h1><p class="doc-lead">{{page.description}}</p>
+    <div class="doc-meta"><span class="source-info"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8l-5-5h-3"/><path d="M15 3v6h6"/></svg> {{ui.source_label}}</span><a href="{{repo}}/blob/main/{{page.source}}" target="_blank" rel="noopener noreferrer">{{ui.source}}</a></div>
+    <article class="markdown-body">{{page.html | safe}}</article>
+    <div class="doc-source-note"><span class="source-note-icon">i</span><p>{{ui.source_note}} <a href="{{repo}}/blob/main/spec/POLIS-SPEC-v6.md" target="_blank" rel="noopener noreferrer">{{ui.spec}}</a> {{ui.source_note_end}}</p></div>
+    <nav class="doc-pagination" aria-label="{{ui.adjacent}}">{% if page.previous %}<a class="pagination-link prev" href="{{page.previous.href}}"><small>{{ui.prev}}</small><strong>{{page.previous.title}}</strong></a>{% else %}<span></span>{% endif %}{% if page.next %}<a class="pagination-link next" href="{{page.next.href}}"><small>{{ui.next}}</small><strong>{{page.next.title}}</strong></a>{% endif %}</nav>
+    <footer class="doc-footer">{{ui.report}} <a href="{{repo}}/issues/new" target="_blank" rel="noopener noreferrer">{{ui.issue}}</a><span>POLIS V6</span></footer>
+  </div></main>
+  <aside class="docs-toc" aria-label="{{ui.on_page}}"><div class="toc-sticky"><div class="toc-title">{{ui.on_page}}</div><ul>{% for entry in page.toc %}<li class="toc-level-{{entry.depth}}"><a href="#{{entry.id}}">{{entry.title}}</a></li>{% endfor %}</ul><a class="toc-back" href="#main">{{ "↑ Back to top" if lang == "en" else "↑ Voltar ao início" }}</a></div></aside>
+</div>
+{% endblock %}

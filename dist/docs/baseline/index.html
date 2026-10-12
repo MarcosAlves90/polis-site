@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#091622">
+  <meta name="description" content="Como strict, compatible e permissive controlam a admissibilidade de um pacote em diferentes estados Git.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="POLIS">
+  <meta property="og:title" content="Modos de baseline — POLIS">
+  <meta property="og:description" content="Como strict, compatible e permissive controlam a admissibilidade de um pacote em diferentes estados Git.">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:image" content="/assets/og-cover-pt.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="POLIS V6 — Entrega de software fundamentada em evidências, ilustrada por um farol orientando uma embarcação no mar.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/assets/og-cover-pt.png">
+  
+  
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/assets/nautical.css">
+  <title>Modos de baseline — POLIS</title>
+  <script>try{const t=localStorage.getItem('polis-theme');if(t)document.documentElement.dataset.theme=t;else if(matchMedia('(prefers-color-scheme: light)').matches)document.documentElement.dataset.theme='light'}catch(e){}</script>
+  <script defer src="/assets/app.js"></script>
+</head>
+<body data-base="/" data-lang="pt">
+  <a class="skip-link" href="#main">Pular para o conteúdo</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand-wrap">
+        <button class="icon-button mobile-menu-button" type="button" data-open-nav aria-label="Abrir navegação" aria-controls="docs-sidebar" aria-expanded="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a href="/" class="brand" aria-label="POLIS — Início">
+          <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 34 34" width="32" height="32" fill="none"><circle cx="17" cy="17" r="14.5" stroke="currentColor" stroke-width="1.2"/><circle cx="17" cy="17" r="10.5" stroke="currentColor" opacity=".5" stroke-width=".8"/><path d="M17 4.5 20.2 13.8 29.5 17 20.2 20.2 17 29.5 13.8 20.2 4.5 17 13.8 13.8Z" stroke="currentColor" stroke-width="1.1" fill="none"/><path d="m17 8 2.2 9-2.2 2.2-2.2-2.2Z" fill="currentColor"/><circle cx="17" cy="17" r="1.6" fill="currentColor"/></svg></span>
+          <span class="brand-name">POLIS<span class="brand-dot">.</span></span>
+          <span class="brand-divider"></span><span class="brand-subtitle">Docs <span class="brand-version">V6</span></span>
+        </a>
+      </div>
+      <nav class="desktop-nav" aria-label="Navegação principal">
+        <a href="/" >Início</a>
+        <a href="/docs/visao-geral/" class="nav-active">Documentação</a>
+        <a href="/docs/seguranca/">Segurança</a>
+      </nav>
+      <div class="header-actions">
+        <nav class="locale-switch" aria-label="Idioma">
+          <a class="locale-option" href="/docs/baseline/" lang="pt-BR" hreflang="pt-BR" title="Português" aria-current="page">PT</a>
+          <a class="locale-option" href="/en/docs/baseline-modes/" lang="en" hreflang="en" title="English" >EN</a>
+        </nav>
+        <button class="search-trigger" data-open-search type="button" aria-label="Buscar na documentação"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" width="17" height="17"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><span class="search-trigger-label">Buscar documentação</span><kbd>/</kbd></button>
+        <button class="icon-button theme-button" type="button" data-theme-toggle aria-label="Alternar tema" title="Alternar tema"><svg class="moon-icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.4 15.3A8.4 8.4 0 0 1 8.7 3.6 8.7 8.7 0 1 0 20.4 15.3Z"/></svg><svg class="sun-icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+        <a class="github-button" href="https://github.com/MarcosAlves90/polis" target="_blank" rel="noopener noreferrer" aria-label="Repositório POLIS no GitHub"><svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M12 .9a11.1 11.1 0 0 0-3.5 21.64c.55.11.75-.24.75-.53v-1.95c-3.06.67-3.7-1.29-3.7-1.29-.5-1.27-1.22-1.6-1.22-1.6-1-.68.08-.67.08-.67 1.1.08 1.68 1.13 1.68 1.13.98 1.68 2.56 1.2 3.18.92.1-.71.38-1.2.7-1.48-2.44-.28-5-1.22-5-5.45 0-1.2.42-2.18 1.13-2.95-.12-.28-.5-1.4.11-2.9 0 0 .93-.3 3.05 1.12a10.55 10.55 0 0 1 5.55 0C14.65 5.55 15.58 5.85 15.58 5.85c.61 1.5.23 2.62.11 2.9.71.77 1.13 1.75 1.13 2.95 0 4.24-2.57 5.17-5.02 5.44.4.35.75 1.03.75 2.08v2.79c0 .29.2.65.76.53A11.1 11.1 0 0 0 12 .9Z"/></svg><span>GitHub</span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+      </div>
+    </div>
+  </header>
+  
+<div class="mobile-nav-overlay" data-nav-overlay hidden></div>
+<div class="docs-shell">
+  <aside class="docs-sidebar" id="docs-sidebar" aria-label="Navegação da documentação">
+    <div class="sidebar-inner"><div class="sidebar-top"><span>DOCUMENTAÇÃO</span><button type="button" class="icon-button sidebar-close" data-close-nav aria-label="Fechar navegação">✕</button></div>
+      <div class="nav-section"><div class="nav-section-label">Comece aqui</div><ul><li><a href="/docs/visao-geral/" >Visão geral</a></li><li><a href="/docs/instalacao/" >Instalação</a></li><li><a href="/docs/primeiros-passos/" >Primeiros passos</a></li><li><a href="/docs/conceitos/" >Conceitos fundamentais</a></li></ul></div><div class="nav-section"><div class="nav-section-label">Fluxo de entrega</div><ul><li><a href="/docs/fluxo-de-entrega/" >Fluxo de entrega</a></li><li><a href="/docs/sdd-tdd/" >SDD e TDD</a></li><li><a href="/docs/validacao/" >Validação e gates</a></li><li><a href="/docs/artefatos/" >Artefatos e verificação</a></li><li><a href="/docs/aplicacao-segura/" >Aplicação segura</a></li><li><a href="/docs/execucao-offline/" >Execução offline</a></li></ul></div><div class="nav-section"><div class="nav-section-label">Conceitos e segurança</div><ul><li><a href="/docs/contratos/" >Change Contract</a></li><li><a href="/docs/politica-de-projeto/" >Política do projeto</a></li><li><a href="/docs/baseline/" class="sidebar-active" aria-current="page">Modos de baseline</a></li><li><a href="/docs/seguranca/" >Segurança e confiança</a></li><li><a href="/docs/rastreabilidade/" >Rastreabilidade e evidências</a></li></ul></div><div class="nav-section"><div class="nav-section-label">Referência</div><ul><li><a href="/docs/comandos/" >Comandos da CLI</a></li><li><a href="/docs/codigos-de-saida/" >Códigos de saída</a></li><li><a href="/docs/solucao-de-problemas/" >Solução de problemas</a></li></ul></div><div class="nav-section"><div class="nav-section-label">Projeto</div><ul><li><a href="/docs/arquitetura/" >Arquitetura</a></li><li><a href="/docs/contribuicao/" >Contribuição e evolução</a></li></ul></div>
+      <div class="sidebar-bottom"><span class="sidebar-status"><i></i> POLIS V6</span><a href="https://github.com/MarcosAlves90/polis" target="_blank" rel="noopener noreferrer">Código no GitHub ↗</a></div>
+    </div>
+  </aside>
+  <main id="main" class="doc-main"><div class="doc-content">
+    <div class="breadcrumbs"><a href="/">Início</a><span aria-hidden="true">/</span><a href="/docs/visao-geral/">Docs</a><span aria-hidden="true">/</span><span>Modos de baseline</span></div>
+    <div class="doc-eyebrow">Conceitos e segurança <span class="eyebrow-dot">·</span> POLIS V6</div>
+    <h1>Modos de baseline</h1><p class="doc-lead">Como strict, compatible e permissive controlam a admissibilidade de um pacote em diferentes estados Git.</p>
+    <div class="doc-meta"><span class="source-info"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8l-5-5h-3"/><path d="M15 3v6h6"/></svg> Documentação V6</span><a href="https://github.com/MarcosAlves90/polis/blob/main/docs/usage.md" target="_blank" rel="noopener noreferrer">Ver fonte oficial ↗</a></div>
+    <article class="markdown-body"><p>Um pacote é produzido contra uma linha de base bloqueada. O consumidor pode estar em um commit igual ou diferente, e o POLIS permite escolher explicitamente como essa diferença deve ser tratada.</p>
+<h2 id="strict-padrao"><a class="heading-link" href="#strict-padrao" aria-label="Link direto para esta seção">#</a>Strict — padrão</h2>
+<div class="code-block"><div class="code-top"><span class="code-lang">bash</span><button class="code-copy" type="button" aria-label="Copiar" data-copy-code><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="15" height="15" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span>Copiar</span></button></div><pre><code class="language-bash">polis preflight --repo /consumer \
+  --baseline-mode strict artifact.polis
+</code></pre></div><p>Exige que o <code>HEAD</code> do consumidor corresponda <strong>exatamente</strong> ao commit base bloqueado do artefato. É a opção mais restritiva e o padrão da CLI.</p>
+<h2 id="compatible-descendente-validado"><a class="heading-link" href="#compatible-descendente-validado" aria-label="Link direto para esta seção">#</a>Compatible — descendente validado</h2>
+<div class="code-block"><div class="code-top"><span class="code-lang">bash</span><button class="code-copy" type="button" aria-label="Copiar" data-copy-code><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="15" height="15" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span>Copiar</span></button></div><pre><code class="language-bash">polis preflight --repo /consumer \
+  --baseline-mode compatible artifact.polis
+</code></pre></div><p>Permite um <code>HEAD</code> limpo diferente quando há <strong>ancestralidade descendente comprovada</strong> e todas as verificações necessárias de contexto, provas, escopo, política e árvore de destino são aprovadas. Não é uma resolução automática de conflitos.</p>
+<h2 id="permissive-ancestralidade-nao-comprovada"><a class="heading-link" href="#permissive-ancestralidade-nao-comprovada" aria-label="Link direto para esta seção">#</a>Permissive — ancestralidade não comprovada</h2>
+<div class="code-block"><div class="code-top"><span class="code-lang">bash</span><button class="code-copy" type="button" aria-label="Copiar" data-copy-code><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="15" height="15" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span>Copiar</span></button></div><pre><code class="language-bash">polis preflight --repo /consumer \
+  --baseline-mode permissive artifact.polis
+</code></pre></div><p>Pode tentar bases sem relação de descendência, ainda exigindo validação de patch, escopo, política e árvore de destino. A ausência de prova de ancestralidade é reportada como risco. Não equivale a ignorar conflitos.</p>
+<h2 id="prova-historica-incorporada"><a class="heading-link" href="#prova-historica-incorporada" aria-label="Link direto para esta seção">#</a>Prova histórica incorporada</h2>
+<p>Os formatos mais novos incluem um snapshot autenticado da baseline bloqueada para repetir provas de desenvolvimento quando os objetos Git originais não estão presentes. A opção permissiva pode permitir um waiver <strong>explícito</strong> para prova histórica indisponível, com garantias reduzidas reportadas:</p>
+<div class="code-block"><div class="code-top"><span class="code-lang">bash</span><button class="code-copy" type="button" aria-label="Copiar" data-copy-code><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="15" height="15" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span>Copiar</span></button></div><pre><code class="language-bash">polis preflight --repo /consumer \
+  --baseline-mode permissive \
+  --allow-missing-baseline-proof artifact.polis
+</code></pre></div><p>Essa exceção não está disponível nos demais modos. Seu uso precisa de decisão consciente sobre as garantias ausentes.</p>
+<h2 id="preflight-e-apply-sao-separados"><a class="heading-link" href="#preflight-e-apply-sao-separados" aria-label="Link direto para esta seção">#</a>Preflight e apply são separados</h2>
+<p>O modo escolhido para <code>preflight</code> não é automaticamente transferido para <code>apply</code>. Repita a intenção de forma explícita no comando de aplicação autorizado, e espere uma nova validação.</p>
+</article>
+    <div class="doc-source-note"><span class="source-note-icon">i</span><p>Este site apresenta um guia de leitura. Em caso de divergência, a <a href="https://github.com/MarcosAlves90/polis/blob/main/spec/POLIS-SPEC-v6.md" target="_blank" rel="noopener noreferrer">Especificação V6</a> prevalece para contratos e semântica de máquina. Consulte a fonte oficial para detalhes normativos.</p></div>
+    <nav class="doc-pagination" aria-label="Páginas adjacentes"><a class="pagination-link prev" href="/docs/politica-de-projeto/"><small>← ANTERIOR</small><strong>Política do projeto</strong></a><a class="pagination-link next" href="/docs/seguranca/"><small>PRÓXIMO →</small><strong>Segurança e confiança</strong></a></nav>
+    <footer class="doc-footer">Encontrou algo desatualizado? <a href="https://github.com/MarcosAlves90/polis/issues/new" target="_blank" rel="noopener noreferrer">Abrir uma issue no GitHub ↗</a><span>POLIS V6</span></footer>
+  </div></main>
+  <aside class="docs-toc" aria-label="NESTA PÁGINA"><div class="toc-sticky"><div class="toc-title">NESTA PÁGINA</div><ul><li class="toc-level-2"><a href="#strict-padrao">Strict — padrão</a></li><li class="toc-level-2"><a href="#compatible-descendente-validado">Compatible — descendente validado</a></li><li class="toc-level-2"><a href="#permissive-ancestralidade-nao-comprovada">Permissive — ancestralidade não comprovada</a></li><li class="toc-level-2"><a href="#prova-historica-incorporada">Prova histórica incorporada</a></li><li class="toc-level-2"><a href="#preflight-e-apply-sao-separados">Preflight e apply são separados</a></li></ul><a class="toc-back" href="#main">↑ Voltar ao início</a></div></aside>
+</div>
+
+  <div class="search-overlay" data-search-overlay hidden>
+    <div class="search-backdrop" data-close-search></div>
+    <section class="search-dialog" role="dialog" aria-modal="true" aria-label="Buscar na documentação">
+      <div class="search-input-wrap"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input type="search" id="site-search" placeholder="O que você quer encontrar?" autocomplete="off" aria-label="Buscar na documentação"><button type="button" class="search-escape" data-close-search>ESC</button></div>
+      <div class="search-results" id="search-results" role="listbox"><div class="search-empty">Pesquise comandos, conceitos ou fluxos do POLIS.</div></div>
+      <div class="search-dialog-footer"><span><kbd>↑</kbd> <kbd>↓</kbd> navegar <kbd>↵</kbd> abrir</span><span>POLIS V6</span></div>
+    </section>
+  </div>
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+</body>
+</html>

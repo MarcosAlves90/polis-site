@@ -1,0 +1,234 @@
+/*
+ * POLIS — identidade náutica, inspirada na capa oficial.
+ * Ajuste as cores aqui; estrutura, componentes e responsividade permanecem em styles.css.
+ * Este tema não altera a funcionalidade da documentação.
+ */
+:root {
+  --bg: #091622;
+  --bg-deep: #06111d;
+  --panel: #112331;
+  --panel-2: #152b39;
+  --panel-3: #1b3442;
+  --line: #2b4551;
+  --line-soft: #1d3442;
+  --text: #eee9dc;
+  --muted: #b4c0c1;
+  --subtle: #8b9ea6;
+  --accent: #dfbc82;           /* latão iluminado */
+  --accent-alt: #80d9ca;       /* farol verde-água */
+  --accent-ink: #17222a;
+  --glow: rgba(215, 166, 102, .14);
+  --header: rgba(6, 17, 29, .94);
+  --shadow: 0 26px 60px rgba(0, 6, 14, .36);
+}
+:root[data-theme="light"] {
+  --bg: #f5f2e9;
+  --bg-deep: #eae6db;
+  --panel: #fffcf6;
+  --panel-2: #f0ece2;
+  --panel-3: #e9e2d4;
+  --line: #cfd0c9;
+  --line-soft: #e2ded5;
+  --text: #1b3140;
+  --muted: #4b6068;
+  --subtle: #61747b;
+  --accent: #865a25;           /* cobre legível em pergaminho */
+  --accent-alt: #176d70;
+  --accent-ink: #ffffff;
+  --glow: rgba(164, 112, 51, .12);
+  --header: rgba(245, 242, 233, .95);
+  --shadow: 0 24px 50px rgba(31, 46, 56, .10);
+}
+
+/* Elementos de navegação: bússola, cartografia e acabamento de latão. */
+.site-header { box-shadow: 0 1px 0 rgba(222, 188, 130, .06); }
+.brand-mark {
+  color: var(--accent);
+  filter: drop-shadow(0 0 9px rgba(113, 216, 204, .16));
+}
+.brand-version { border-color: var(--line); }
+.desktop-nav a.nav-active:after,
+.desktop-nav a[aria-current]:after { background: linear-gradient(90deg, var(--accent), var(--accent-alt)); }
+.search-trigger { background: var(--panel); }
+.github-button:hover { background: var(--glow); }
+.btn-primary {
+  background: linear-gradient(135deg, #e7c995, #cda16b);
+  border-color: #f1d5a4;
+  color: #192631;
+  box-shadow: 0 7px 30px rgba(207, 160, 100, .16);
+}
+.btn-primary:hover { background: linear-gradient(135deg, #f2d7a8, #dab27c); }
+:root[data-theme="light"] .btn-primary {
+  background: linear-gradient(135deg, #8c612c, #74471e);
+  border-color: #74471e;
+  color: #fff;
+}
+.btn-secondary { background: rgba(44, 77, 90, .15); }
+.section-label { color: var(--accent); }
+.label-line { position: relative; width: 23px; height: 1px; background: var(--accent); }
+.label-line::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: -2px;
+  height: 5px;
+  width: 5px;
+  transform: rotate(45deg);
+  background: var(--accent);
+}
+
+/* A arte original aparece apenas como atmosfera, sem substituir o conteúdo principal. */
+.hero-section {
+  isolation: isolate;
+  background: radial-gradient(ellipse at 78% 37%, rgba(31, 99, 109, .22), transparent 55%), var(--bg-deep);
+}
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: url("cover-art.webp") right 54% / cover no-repeat;
+  opacity: .29;
+  -webkit-mask-image: linear-gradient(90deg, transparent 17%, #000 78%);
+  mask-image: linear-gradient(90deg, transparent 17%, #000 78%);
+}
+.hero-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 62%, rgba(13, 59, 73, .14));
+}
+.hero-mesh {
+  opacity: .36;
+  background-image:
+    radial-gradient(circle at 7% 16%, #8eb8bb 1px, transparent 1.7px),
+    radial-gradient(circle at 64% 24%, #bbd3cd 1px, transparent 1.7px),
+    radial-gradient(circle, #516f7d .65px, transparent 1px);
+  background-size: 370px 270px, 480px 390px, 29px 29px;
+}
+.eyebrow {
+  color: var(--accent);
+  background: rgba(192, 144, 80, .085);
+  border-color: rgba(217, 181, 120, .24);
+}
+.pulse-dot { background: var(--accent-alt); box-shadow: 0 0 0 4px rgba(90, 210, 194, .11), 0 0 16px rgba(103, 219, 198, .28); }
+.hero-content h1 span { color: var(--accent); }
+.hero-proof svg { color: var(--accent-alt); }
+.terminal-card {
+  background: #081725;
+  border-color: #46616b;
+  box-shadow: 0 42px 100px rgba(0, 5, 15, .62), 0 0 0 1px rgba(220, 175, 100, .06);
+}
+.terminal-bar { background: #122837; border-color: #2b4451; color: #a5b9bc; }
+.terminal-body { color: #e0e7e6; }
+.terminal-comment { color: #8fa7ac; }
+.terminal-prompt, .terminal-ok { color: #89ddc7; }
+.blink-cursor { background: #dbb57f; }
+.hero-floating { background: #172e3a; border-color: #42616b; color: #f5ecda; }
+.hero-floating small { color: #b7c6c5; }
+.floating-icon { background: #473e2d; color: #e9c687; }
+.floating-icon.cube { background: #1d4a4c; color: #8be0d2; }
+:root[data-theme="light"] .hero-section {
+  background: radial-gradient(ellipse at 79% 32%, rgba(46, 127, 136, .10), transparent 54%), var(--bg-deep);
+}
+:root[data-theme="light"] .hero-section::before { opacity: .11; }
+:root[data-theme="light"] .eyebrow { background: rgba(164, 110, 42, .06); border-color: rgba(143, 92, 36, .25); }
+
+/* Cartas de navegação: pequenas linhas metálicas no lugar do antigo verde neon. */
+.feature-card, .explore-card, .pagination-link, .code-block, .quickstart-code {
+  box-shadow: inset 0 1px 0 rgba(231, 206, 157, .035);
+}
+.feature-card, .explore-card { position: relative; }
+.feature-card::before, .explore-card::before {
+  content: "";
+  position: absolute;
+  left: 27px;
+  top: -1px;
+  width: 46px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: .78;
+}
+.feature-icon { color: var(--accent-alt); }
+.feature-card:hover, .explore-card:hover, .pagination-link:hover { border-color: var(--accent); }
+.workflow-section {
+  background-image: linear-gradient(rgba(110, 160, 163, .025) 1px, transparent 1px), linear-gradient(90deg, rgba(110, 160, 163, .025) 1px, transparent 1px);
+  background-size: 62px 62px;
+  background-color: var(--bg-deep);
+}
+.process-side .side-dot { background: var(--accent); }
+.consumer .process-side .side-dot { background: var(--accent-alt); }
+.bridge-pill { box-shadow: 0 0 22px var(--glow); }
+.quickstart-code { border-color: var(--line); }
+.green-dot { background: var(--accent-alt); }
+
+/* A pequena vinheta final destaca o farol original da capa. */
+.closing-card {
+  isolation: isolate;
+  background: linear-gradient(100deg, var(--panel), var(--panel-2));
+}
+.closing-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 42%;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .49;
+  background: url("cover-art.webp") 69% 66% / cover no-repeat;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 45%);
+  mask-image: linear-gradient(90deg, transparent, #000 45%);
+}
+.closing-decoration { display: none; }
+:root[data-theme="light"] .closing-card::before { opacity: .16; }
+
+/* Documentação mantém a hierarquia original, com acabamentos coerentes com a capa. */
+.docs-sidebar { background: var(--bg); }
+.nav-section li a.sidebar-active { color: var(--accent); }
+.doc-source-note { border-left: 2px solid var(--accent); }
+.markdown-body blockquote { border-left-color: var(--accent-alt); }
+.docs-toc a:hover, .docs-toc a.active { color: var(--accent); }
+
+@media (max-width: 760px) {
+  .hero-section::before { opacity: .21; background-position: 59% 53%; -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 80%); mask-image: linear-gradient(180deg, transparent 0%, #000 80%); }
+  :root[data-theme="light"] .hero-section::before { opacity: .085; }
+  .closing-card::before { inset: 25% -18% 0 10%; opacity: .24; }
+  :root[data-theme="light"] .closing-card::before { opacity: .08; }
+}
+
+/* Always-visible, two-way locale selector on both language versions. */
+.locale-switch {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  font: 700 11px var(--mono);
+  line-height: 1;
+}
+.locale-option {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 28px;
+  min-width: 31px;
+  padding: 0 5px;
+  border-radius: 5px;
+  color: var(--muted);
+  transition: color .18s, background .18s;
+}
+.locale-option:hover { color: var(--accent); background: var(--panel-2); }
+.locale-option[aria-current="page"] { color: var(--accent); background: var(--panel-3); }
+.locale-option:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 480px) {
+  .github-button { display: none; }
+  .locale-switch { padding: 2px; }
+  .locale-option { min-width: 28px; height: 28px; padding: 0 3px; }
+}
+@media (max-width: 355px) {
+  .brand-mark { display: none; }
+}
