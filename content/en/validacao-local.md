@@ -7,11 +7,15 @@ order: 3
 source: docs/workflows/local-agent-workspace.md
 ---
 
-Use this workflow when a developer or coding agent **already works in the checkout under review**. POLIS locks the contract, checks the required proof, and runs policy gates on the local change. **`workspace validate` neither creates nor verifies a `.polis` delivery package.**
+**Running an AI coding agent on your computer, editing that same repository? This is the recommended path.** The agent needs access to the checkout, POLIS CLI, Git, and the tools required by project gates. POLIS locks the contract, checks required proof, and runs the policy gates on the local change. **`workspace validate` neither creates nor verifies a delivery `.polis` file.** Do not run `build`, `preflight`, or `apply` merely to validate the same checkout.
+
+Even if the conversation started in a web chat, when an agent with checkout access implements and validates **there**, this local workflow applies. Use [Remote delivery](../remote-delivery/) only if the change must cross to another checkout as a package.
 
 ## Prepare external inputs
 
 Start from a clean committed Git baseline. Keep external policy, contract, optional plan, Red proof, and report **outside the repository**. If the project uses `.polis/policy.json`, that is policy configuration, not a delivery package.
+
+The `.polis/` folder may also hold `.polis/policy-provenance.json`. Neither file is a `change.polis` delivery package, which belongs to **the other workflow**. Here, `polis init --dry-run` creates the JSON policy outside the checkout; later commands use the **same file** through `--policy`.
 
 ```bash
 polis doctor
@@ -51,6 +55,8 @@ polis workspace validate --repo . --policy "$POLIS_OUTSIDE/policy.json" \
 ```
 
 Omit `--regression-patch` for a valid Green-to-Green characterization. If using an Implementation Plan, supply the same bytes to the operations that require it. Successful validation reports `workspace_validated: true`, while `delivery_artifact_built` and `delivery_artifact_verified` are false.
+
+The `workspace-validation.json` report is an **external checkpoint**, not a transferable package, a signature, or producer authentication. The successful result refers to that validated state, not subsequent changes.
 
 ## Resume from a checkpoint
 

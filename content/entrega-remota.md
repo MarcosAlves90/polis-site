@@ -8,9 +8,13 @@ source: docs/workflows/web-agent-delivery.md
 
 Use este fluxo quando um agente web, CI ou desenvolvedor precisa entregar uma alteração **a outro checkout**. O produtor deve ter acesso real ao repositório de origem, ao Git e ao runtime POLIS; somente texto de uma conversa não comprova que um pacote foi construído ou verificado.
 
+**Usando um chatbot ou IA pela web?** Ele pode ajudar a descrever a mudança e preparar arquivos e instruções. Porém, se não tiver acesso ao repositório e não puder executar Git e POLIS, **não consegue produzir nem verificar o pacote por conta própria**. Um desenvolvedor, agente web com ferramentas ou CI autorizado deve executar os comandos no checkout produtor. Esse fluxo usa um arquivo `.polis` **porque a entrega vai para outro checkout**, não simplesmente porque a IA está no navegador.
+
 ## Produtor: pacote externo e descartável
 
 Parta de uma baseline limpa e commitada. A política, o contrato, a prova, a assinatura e o pacote devem ficar fora do worktree. O `polis build` rejeita saídas resolvidas dentro do repositório, e a retenção do projeto não copia novos pacotes para `.polis/artifacts/packages/`.
+
+O arquivo `alteracao.polis` é o **resultado transportável do build**. A pasta `.polis/` pode existir no repositório somente como configuração/evidência, incluindo `.polis/policy.json` e `.polis/policy-provenance.json`. Neste exemplo a política `/outside/policy.json` é **externa**. Nenhuma dessas políticas é o pacote de entrega.
 
 Depois de preparar e bloquear os contratos e capturar a prova apropriada conforme [Fluxo de entrega](../fluxo-de-entrega/), execute:
 
@@ -22,11 +26,12 @@ polis build --repo /producer --policy /outside/policy.json \
   --out /outside/packages
 ```
 
-Para Green-to-Green, omita `--regression-patch` com a prova de caracterização correspondente. O caminho e o nome efetivos do pacote são informados pelo comando; use **o arquivo retornado**, não um nome suposto:
+Para Green-to-Green, omita `--regression-patch` com a prova de caracterização correspondente. O caminho e o nome efetivos do pacote são informados pelo comando; substitua abaixo o nome ilustrativo pelo **caminho retornado**, sem presumir o nome:
 
 ```bash
-polis verify /outside/packages/<arquivo-gerado>.polis
-polis inspect /outside/packages/<arquivo-gerado>.polis
+PACKAGE=/outside/packages/nome-retornado-pelo-build.polis
+polis verify "$PACKAGE"
+polis inspect "$PACKAGE"
 ```
 
 O produtor de `v6.12.0` verifica a identidade e o SHA-256 da saída final antes de reportar sucesso. Isso não impede que outro processo com acesso ao sistema de arquivos desloque o pacote depois da última verificação. Verifique os bytes efetivamente transferidos no consumidor. A assinatura Ed25519 é opcional conforme a política de confiança e só autentica a origem quando conferida com uma chave pública confiável obtida independentemente.

@@ -9,6 +9,13 @@ source: docs/quickstart.md
 
 This guide first checks prerequisites, then distinguishes **validation in your existing checkout** from **package delivery to another checkout**. A successful `plan` or `gates` run does not mean that a `.polis` package exists.
 
+## First, choose how the AI works
+
+- **An AI coding agent on your machine, working in the same checkout:** follow [Local workspace validation](../local-workspace-validation/). After contract, proof, and implementation, use `polis workspace validate`; **no delivery `.polis` file is needed**.
+- **Web chatbot or AI delivering changes to another checkout:** follow [Remote delivery](../remote-delivery/). Someone with actual checkout, Git, and POLIS access runs `build` and `verify`; the consumer decides whether to run `preflight` and `apply`. A web chat alone does not produce the package.
+
+The `change.polis` package is a transferable file; the `.polis/` folder and `.polis/policy.json` are project configuration. The example below uses an **external JSON policy** for either workflow. Shell snippets use Bash (Git Bash on Windows); see [Installation](../installation/) for OS-specific options.
+
 ## 1. Install and diagnose
 
 ```bash

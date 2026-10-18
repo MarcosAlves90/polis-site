@@ -8,6 +8,15 @@ source: docs/quickstart.md
 
 O POLIS oferece **dois fluxos**. No checkout em que um agente já trabalha, a validação gera um relatório externo com `workspace validate`, sem pacote. Para transferir a mudança a outro checkout, o produtor cria um pacote `.polis` externo, e o consumidor decide se o aceita. Confira [Validação local](../validacao-local/) e [Entrega remota](../entrega-remota/).
 
+## Qual caminho escolher para a IA?
+
+| Situação | Última etapa do produtor | Entrega |
+| --- | --- | --- |
+| Agente de IA local, trabalhando no checkout do usuário | `polis workspace validate` após o contrato e a prova | Checkpoint externo opcional; **nenhum pacote `.polis`**. |
+| Chatbot/IA na web que precisa entregar a outro checkout | Um produtor com checkout, Git e CLI executa `polis build` e `polis verify` | **Arquivo `.polis` externo**; o consumidor faz `preflight` e `apply` somente após autorização. |
+
+A interface do chat não altera essas regras. Sem acesso ao código e execução efetiva da CLI, o chatbot pode orientar, **mas não gerar ou atestar o pacote**. Também não confunda o arquivo de entrega `mudanca.polis` com a pasta de configuração `.polis/` ou com `.polis/policy.json`; esta política pode ser externa via `--policy`.
+
 ## Etapa 1 — Preparar a mudança
 
 Revise comportamento esperado, escopo autorizado, testes, política do projeto e linha de base Git. O Change Contract é um documento versionado e validado, não apenas uma descrição livre.

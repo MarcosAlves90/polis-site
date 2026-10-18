@@ -22,7 +22,10 @@ Before validating a checkout or packaging a change for another consumer, disting
 | **Evidence** | Bounded structured records of commands, proof, and validation decisions. |
 | **Gate** | A policy-configured check with explicit prerequisites and outcomes. |
 | **Workspace checkpoint** | Externally saved local validation report tied to observed identities, without a delivery package. |
-| **`.polis`** | A verifiable delivery package, distinct from the offline runtime bundle. |
+| **`change.polis` file** | Verifiable delivery package produced by `polis build` to hand off changes to another checkout; not needed for local validation. |
+| **`.polis/` directory** | Repository configuration folder, not a transferable package. It may contain a policy and optional evidence. |
+| **`.polis/policy.json`** | Repository-committed Project Policy JSON; an external policy may instead be passed with `--policy`. |
+| **`.polis/policy-provenance.json`** | Optional `polis init` generated configuration-origin manifest, neither signature nor package. |
 | **Preflight** | Validation against the consumer environment without applying a change. |
 
 ## PASS, FAIL, and BLOCKED are different

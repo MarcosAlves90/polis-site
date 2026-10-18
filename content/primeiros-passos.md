@@ -8,6 +8,13 @@ source: docs/quickstart.md
 
 Este tutorial começa pela verificação do ambiente e separa duas possibilidades: **validar o checkout em que você já trabalha** ou **entregar um pacote a outro checkout**. Uma execução bem-sucedida de `plan` ou `gates` não significa que um pacote `.polis` tenha sido criado.
 
+## Primeiro, escolha como a IA trabalha
+
+- **Agente de IA instalado na sua máquina, com acesso ao mesmo checkout:** siga [Validação local](../validacao-local/). Após preparar contrato, prova e implementação, use `polis workspace validate`; **não é preciso criar um arquivo `.polis`**.
+- **Chatbot ou IA na web para entregar alterações a outro checkout:** siga [Entrega remota](../entrega-remota/). Alguém com acesso real ao checkout, ao Git e ao POLIS executa `build` e `verify`; o consumidor decide sobre `preflight` e `apply`. Só uma conversa na web não produz o pacote.
+
+O pacote `alteracao.polis` é um arquivo de transferência; a pasta `.polis/` e `.polis/policy.json` são configuração do projeto. O exemplo a seguir usa **política JSON externa** e serve aos dois caminhos. Os comandos usam Bash (Git Bash no Windows); consulte [Instalação](../instalacao/) para opções de sistema.
+
 ## 1. Instale e diagnostique
 
 ```bash

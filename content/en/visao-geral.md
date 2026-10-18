@@ -11,6 +11,17 @@ POLIS is a **Go CLI and a software-change delivery protocol**. It brings togethe
 
 Designed for AI-assisted engineering, its mechanisms also work for human-led delivery. It is **not** an AI model, code generator, or cloud service: it **validates local changes and, when transfer is needed, packages and controls their acceptance**.
 
+## Web chatbot or local AI agent?
+
+| Where does AI work? | How does POLIS run? | Is a `.polis` file needed? |
+| --- | --- | --- |
+| **AI agent on your computer**, with checkout and CLI access | Locks the contract, captures required proof, and runs `polis workspace validate` in the same checkout | **No.** It may save an external validation report. |
+| **Web chatbot or AI**, delivering to another checkout | An actual producer with source, Git, and CLI access runs `polis build`; the consumer performs `verify`, `preflight`, and authorized `apply` | **Yes, for the handoff.** The package file is external and disposable. |
+
+**Transfer between checkouts**, not a browser chat interface, determines the workflow. A chat-only assistant can offer guidance and draft instructions, but **cannot claim to have built or verified a package** without running POLIS on an actual checkout. A web agent with those tools can act as producer.
+
+**Different meanings:** `change.polis` is a **delivery file**; `.polis/` is a **project configuration directory** which may contain `.polis/policy.json`, `.polis/policy-provenance.json`, and other evidence. A Project Policy may instead be supplied externally with `--policy`. The directory does not imply a package exists.
+
 ## The problem it addresses
 
 A change may work on the producer's machine and still be incompatible with its destination repository. It can also be difficult to answer basic questions: which requirements does the change satisfy, which tests ran, which files were allowed to change, and what is the exact identity of the resulting tree?

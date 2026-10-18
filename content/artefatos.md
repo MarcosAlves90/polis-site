@@ -8,6 +8,10 @@ source: docs/artifact-trust.md
 
 O arquivo `.polis` é o produto de uma entrega validada. Ele reúne a mudança, os contratos e a evidência necessária para verificação e consumo, dentro de limites e esquemas definidos pela especificação.
 
+**Um agente de IA que já trabalha no checkout do usuário não precisa desse arquivo**: usa `polis workspace validate` e pode guardar um checkpoint externo. Um chatbot na web que só conversa também não produz o arquivo; quando é necessária uma entrega entre checkouts, um produtor com Git, código-fonte e POLIS executa o `build`.
+
+**Arquivo `mudanca.polis` não é diretório `.polis/`.** O segundo guarda configuração como `.polis/policy.json` e `.polis/policy-provenance.json` e eventualmente evidências em `.polis/artifacts/`; uma política JSON pode igualmente ser externa via `--policy`. Um novo pacote de entrega nunca é retido dentro do diretório de configuração.
+
 ## Criar um pacote
 
 O produtor usa `polis build` somente para entregar mudanças a **outro checkout**, depois de bloquear a base e cumprir as provas obrigatórias de desenvolvimento. `--out` exige diretório fisicamente externo ao repositório. O comando retorna o nome real do pacote criado; os nomes abaixo são ilustrativos:

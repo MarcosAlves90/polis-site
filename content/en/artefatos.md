@@ -9,6 +9,10 @@ source: docs/artifact-trust.md
 
 A `.polis` file is the output of a validated delivery. It packages the change, contracts, and evidence required for verification and consumption within the specification's schemas and size limits.
 
+**An AI coding agent already working in the user's checkout does not need this file**: it uses `polis workspace validate` and may save an external checkpoint. A chat-only web assistant does not create this file either; handoff between checkouts requires a producer with source, Git, and POLIS to execute `build`.
+
+**The `change.polis` file is not the `.polis/` directory.** The latter holds configuration such as `.polis/policy.json` and `.polis/policy-provenance.json`, and optionally evidence under `.polis/artifacts/`; an external JSON policy may instead be supplied with `--policy`. New delivery packages are never retained in the configuration directory.
+
 ## Build a delivery package
 
 The producer uses `polis build` to hand off changes **to a different checkout**, after locking a baseline and satisfying mandatory development proof. `--out` must resolve physically outside the repository. The command reports the actual generated filename; paths below are illustrative:

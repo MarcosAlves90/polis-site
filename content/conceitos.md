@@ -21,7 +21,10 @@ Antes de validar um checkout ou produzir um pacote para outro consumidor, vale d
 | **Evidence** | Registros estruturados e limitados de comandos, provas e decisões de validação. |
 | **Gate** | Verificação específica configurada pela política, com dependências e estado explícitos. |
 | **Workspace checkpoint** | Relatório externo da validação local, vinculado a identidades observadas e sem pacote de entrega. |
-| **`.polis`** | Pacote de entrega verificável, diferente do kit offline do runtime. |
+| **Arquivo `mudanca.polis`** | Pacote de entrega verificável gerado por `polis build` para transferência a outro checkout; não é necessário na validação local. |
+| **Diretório `.polis/`** | Pasta de configuração do repositório, diferente do pacote transportável. Pode conter política e evidências opcionais. |
+| **`.polis/policy.json`** | Project Policy JSON versionada no repositório; alternativamente pode-se usar uma política externa com `--policy`. |
+| **`.polis/policy-provenance.json`** | Manifesto opcional de origem das configurações geradas por `polis init`, não uma assinatura nem um pacote. |
 | **Preflight** | Validação do pacote no ambiente consumidor, sem aplicar a mudança. |
 
 ## PASS, FAIL e BLOCKED não são equivalentes

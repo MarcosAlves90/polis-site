@@ -9,6 +9,15 @@ source: docs/quickstart.md
 
 POLIS supports **two workflows**. Agents already editing the target checkout can use `workspace validate` to save an external report without a package. A different consumer checkout needs an external `.polis` package independently checked before acceptance. See [Local workspace validation](../local-workspace-validation/) and [Remote delivery](../remote-delivery/).
 
+## Which workflow does your AI need?
+
+| Scenario | Producer's final step | Handoff |
+| --- | --- | --- |
+| Local AI agent working in the user's checkout | `polis workspace validate` after contract and proof | Optional external checkpoint; **no `.polis` delivery package**. |
+| Web chatbot/AI delivering to another checkout | An actual producer with checkout, Git, and CLI access runs `polis build` and `polis verify` | **External `.polis` file**; the consumer runs `preflight` and authorized `apply`. |
+
+The chat interface itself does not change these rules. Without source access and actual CLI execution, a chatbot can guide you **but cannot build or attest a package**. Also distinguish the delivery file `change.polis` from the `.polis/` configuration folder and `.polis/policy.json`; an external policy can be passed through `--policy`.
+
 ## Step 1 — Prepare the change
 
 Review the expected behavior, authorized scope, tests, Project Policy, and Git baseline. A Change Contract is a versioned and validated document, not a free-form description.

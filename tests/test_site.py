@@ -272,6 +272,71 @@ class SiteTests(unittest.TestCase):
             self.assertNotIn('docs/usage.md#command-reference', html)
             self.assertNotIn('docs/usage.md#repository-artifact-retention', html)
 
+    def test_home_compares_web_chat_and_local_agents_before_delivery_diagram(self):
+        """The primary CTA and first content section must show BOTH AI paths."""
+        for lang, local_slug, remote_slug, terms in [
+            ('', 'validacao-local', 'entrega-remota', ('máquina', 'web')),
+            ('en/', 'local-workspace-validation', 'remote-delivery', ('computer', 'web')),
+        ]:
+            home = self.soup(DIST / lang / 'index.html')
+            local_url = f'/{lang}docs/{local_slug}/'
+            remote_url = f'/{lang}docs/{remote_slug}/'
+            hero = home.select_one('.hero-section')
+            self.assertEqual(
+                [link['href'] for link in hero.select('.hero-buttons a')],
+                [local_url, remote_url],
+            )
+            self.assertTrue(all(term in hero.get_text(' ', strip=True).lower() for term in terms))
+            choice = home.select_one('main > section.ai-path-section')
+            self.assertIsNotNone(choice)
+            self.assertEqual(len(choice.select('.ai-path-grid > article')), 2)
+            local = choice.select_one('.ai-path-local')
+            remote = choice.select_one('.ai-path-remote')
+            self.assertEqual(local.select_one('a[href]')['href'], local_url)
+            self.assertEqual(remote.select_one('a[href]')['href'], remote_url)
+            self.assertIn('polis workspace validate', local.get_text(' ', strip=True))
+            self.assertIn('polis build', remote.get_text(' ', strip=True))
+            self.assertIn('preflight', remote.get_text(' ', strip=True))
+            self.assertIn('.polis', local.get_text(' ', strip=True))
+            self.assertIn('.polis', remote.get_text(' ', strip=True))
+            config = choice.select_one('.ai-path-distinction').get_text(' ', strip=True)
+            for path in ('change.polis' if lang else 'mudanca.polis',
+                         '.polis/', '.polis/policy.json', '.polis/policy-provenance.json', '--policy'):
+                self.assertIn(path, config)
+            sections = home.select('main > section')
+            self.assertLess(sections.index(choice), sections.index(home.select_one('.workflow-section')))
+            self.assertLess(sections.index(choice), sections.index(home.select_one('.quickstart-section')))
+            workflow_heading = home.select_one('#workflow-title').get_text(' ', strip=True)
+            self.assertIn('checkout', workflow_heading.lower())
+            self.assertIn('.polis', home.select_one('.process-bridge').get_text(' ', strip=True))
+
+    def test_guides_separate_chat_only_package_and_project_policy(self):
+        for lang, slugs in [
+            ('', ('visao-geral', 'primeiros-passos', 'fluxo-de-entrega',
+                  'validacao-local', 'entrega-remota', 'conceitos', 'artefatos')),
+            ('en/', ('overview', 'quickstart', 'delivery-workflow',
+                    'local-workspace-validation', 'remote-delivery', 'core-concepts',
+                    'artifacts-and-verification')),
+        ]:
+            guides = {
+                slug: self.soup(DIST / lang / 'docs' / slug / 'index.html').get_text(' ', strip=True)
+                for slug in slugs
+            }
+            for slug, body in guides.items():
+                self.assertIn('.polis/', body, slug)
+                self.assertIn('.polis/policy.json', body, slug)
+            for slug in (slugs[0], slugs[1], slugs[2], slugs[3], slugs[6]):
+                body = guides[slug]
+                self.assertIn('workspace validate', body, slug)
+                self.assertIn('build', body, slug)
+            local = guides[slugs[3]].lower()
+            self.assertTrue(any(phrase in local for phrase in
+                                ('não produz', 'sem pacote', 'neither creates', 'without a package')))
+            remote = guides[slugs[4]].lower()
+            self.assertTrue('chatbot' in remote or 'chat' in remote)
+            self.assertIn('git', remote)
+            self.assertIn('preflight', remote)
+
     def test_first_run_doctor_waits_for_project_policy(self):
         """A fresh checkout has no committed policy for repository diagnostics."""
         for homepage in (DIST / 'index.html', DIST / 'en' / 'index.html'):
