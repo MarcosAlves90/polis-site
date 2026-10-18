@@ -14,10 +14,11 @@ Use this workflow when a developer or coding agent **already works in the checko
 Start from a clean committed Git baseline. Keep external policy, contract, optional plan, Red proof, and report **outside the repository**. If the project uses `.polis/policy.json`, that is policy configuration, not a delivery package.
 
 ```bash
-polis doctor --repo .
+polis doctor
 POLIS_OUTSIDE="${POLIS_OUTSIDE:-$(mktemp -d)}"
 mkdir -p "$POLIS_OUTSIDE"
 polis init --repo . --profile auto --dry-run > "$POLIS_OUTSIDE/policy.json"
+polis doctor --repo . --policy "$POLIS_OUTSIDE/policy.json"
 polis plan --repo . --policy "$POLIS_OUTSIDE/policy.json"
 ```
 

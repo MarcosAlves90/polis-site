@@ -272,6 +272,32 @@ class SiteTests(unittest.TestCase):
             self.assertNotIn('docs/usage.md#command-reference', html)
             self.assertNotIn('docs/usage.md#repository-artifact-retention', html)
 
+    def test_first_run_doctor_waits_for_project_policy(self):
+        """A fresh checkout has no committed policy for repository diagnostics."""
+        for homepage in (DIST / 'index.html', DIST / 'en' / 'index.html'):
+            page = self.soup(homepage)
+            terminal = page.select_one('.terminal-card').get_text(' ', strip=True)
+            self.assertIn('polis doctor', terminal)
+            self.assertNotIn('polis doctor --repo', terminal)
+            snippet = page.select_one('#install-snippet').get_text()
+            init_command = 'polis init --repo . --profile auto --dry-run'
+            repo_doctor = 'polis doctor --repo . --policy "$POLIS_OUTSIDE/policy.json"'
+            self.assertIn('polis doctor\n', snippet)
+            self.assertIn(repo_doctor, snippet)
+            self.assertLess(snippet.index('polis doctor\n'), snippet.index(init_command))
+            self.assertLess(snippet.index(init_command), snippet.index(repo_doctor))
+            self.assertIn('Windows (Git Bash)', page.select_one('.snippet-footer').get_text())
+
+        for locale in (Path('content'), Path('content/en')):
+            for filename in ('primeiros-passos.md', 'validacao-local.md', 'comandos.md'):
+                source = (ROOT / locale / filename).read_text(encoding='utf-8')
+                init_command = 'polis init --repo . --profile auto --dry-run'
+                repo_doctor = 'polis doctor --repo . --policy '
+                self.assertIn(init_command, source)
+                self.assertIn(repo_doctor, source)
+                self.assertLess(source.index(init_command), source.index(repo_doctor))
+                self.assertNotIn('polis doctor --repo .\n', source)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -15,7 +15,7 @@ go install github.com/MarcosAlves90/polis/v6/cmd/polis@latest
 polis doctor
 ```
 
-O comando `doctor` verifica os pré-requisitos da CLI. Depois de entrar no repositório, `doctor --repo .` acrescenta verificações estáticas de política e ferramentas, sem executar gates. Consulte [Instalação](../instalacao/) caso o binário não esteja no `PATH`.
+O comando `doctor` sem `--repo` verifica os pré-requisitos da CLI, mesmo antes de existir uma política. Depois de preparar a política, `doctor --repo . --policy <arquivo>` acrescenta verificações estáticas de política e ferramentas, sem executar gates. Consulte [Instalação](../instalacao/) caso o binário não esteja no `PATH`.
 
 ## 2. Escolha um repositório Git
 
@@ -24,7 +24,6 @@ Use um repositório que você possa inspecionar. O POLIS identifica o estado do 
 ```bash
 cd /caminho/do/seu-projeto
 git status --short
-polis doctor --repo .
 ```
 
 Não descarte alterações locais para satisfazer a CLI. O fluxo de bloqueio do POLIS existe justamente para impedir que um estado ambíguo seja aceito silenciosamente.
@@ -38,6 +37,7 @@ Em um módulo Go raiz, o perfil automático pode gerar uma política adequada ao
 POLIS_OUTSIDE="${POLIS_OUTSIDE:-$(mktemp -d)}"
 mkdir -p "$POLIS_OUTSIDE"
 polis init --repo . --profile auto --dry-run > "$POLIS_OUTSIDE/policy.json"
+polis doctor --repo . --policy "$POLIS_OUTSIDE/policy.json"
 ```
 
 A detecção automática do perfil `auto` reconhece módulos Go na raiz. Para outros ecossistemas, o perfil `custom` exige configuração explícita dos comandos.

@@ -22,8 +22,8 @@ Esta página reúne um índice orientado por propósito. Para parâmetros comple
 polis help
 polis help start
 polis doctor --format json
-polis doctor --repo .
 polis init --repo . --profile auto --dry-run > /outside/policy.json
+polis doctor --repo . --policy /outside/policy.json
 polis plan --repo . --policy /outside/policy.json --format json
 ```
 

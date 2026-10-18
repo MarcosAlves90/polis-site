@@ -16,7 +16,7 @@ go install github.com/MarcosAlves90/polis/v6/cmd/polis@latest
 polis doctor
 ```
 
-`doctor` checks CLI prerequisites. After entering the target checkout, run `doctor --repo .` to inspect policy and tooling statically without executing gates. See [Installation](../installation/) if the binary is not on `PATH`.
+`doctor` without `--repo` checks CLI prerequisites even before a policy exists. After preparing the policy, run `doctor --repo . --policy <file>` to inspect policy and tooling statically without executing gates. See [Installation](../installation/) if the binary is not on `PATH`.
 
 ## 2. Choose a Git repository
 
@@ -25,7 +25,6 @@ Work in a repository whose state you can inspect. POLIS identifies the Git state
 ```bash
 cd /path/to/your/project
 git status --short
-polis doctor --repo .
 ```
 
 Do not discard local changes simply to satisfy the CLI. POLIS intentionally blocks ambiguous states rather than silently accepting them.
@@ -39,6 +38,7 @@ For a root Go module, `auto` can generate a profile. Preview it without persisti
 POLIS_OUTSIDE="${POLIS_OUTSIDE:-$(mktemp -d)}"
 mkdir -p "$POLIS_OUTSIDE"
 polis init --repo . --profile auto --dry-run > "$POLIS_OUTSIDE/policy.json"
+polis doctor --repo . --policy "$POLIS_OUTSIDE/policy.json"
 ```
 
 Automatic profile detection supports root Go modules. Other ecosystems require explicit commands through the `custom` profile.
