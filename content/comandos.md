@@ -8,6 +8,8 @@ source: docs/commands.md
 
 Esta página reúne um índice orientado por propósito. Para parâmetros completos, use **`polis help <comando>`**, `polis <comando> --help` ou a [referência oficial dos comandos](https://github.com/MarcosAlves90/polis/blob/main/docs/commands.md#agent-command-instructions), também incorporada ao help da CLI.
 
+Os exemplos usam um **checkout Git com módulo Go na raiz** e uma política externa. Mantenha `POLIS_OUTSIDE` fisicamente fora do repositório (inclusive se configurar a variável manualmente). Os caminhos de contrato e pacote nas seções seguintes pressupõem arquivos válidos criados pelas etapas anteriores; não são nomes gerados automaticamente.
+
 ## Descoberta e preparação
 
 | Comando | Para que serve |
@@ -22,9 +24,11 @@ Esta página reúne um índice orientado por propósito. Para parâmetros comple
 polis help
 polis help start
 polis doctor --format json
-polis init --repo . --profile auto --dry-run > /outside/policy.json
-polis doctor --repo . --policy /outside/policy.json
-polis plan --repo . --policy /outside/policy.json --format json
+POLIS_OUTSIDE="${POLIS_OUTSIDE:-$(mktemp -d)}"
+mkdir -p "$POLIS_OUTSIDE"
+polis init --repo . --profile auto --dry-run > "$POLIS_OUTSIDE/policy.json"
+polis doctor --repo . --policy "$POLIS_OUTSIDE/policy.json"
+polis plan --repo . --policy "$POLIS_OUTSIDE/policy.json" --format json
 ```
 
 ## Validação e planejamento
@@ -36,11 +40,14 @@ polis plan --repo . --policy /outside/policy.json --format json
 | `workspace status` | Compara identidade de snapshot com checkpoint não autenticado. |
 | `implementation-plan` | Gera um plano opcional derivado do contrato bloqueado. |
 
+`implementation-plan` requer um **contrato previamente bloqueado por `polis start`** (mostrado na próxima seção), além da mesma política que foi usada no bloqueio. Os blocos abaixo ilustram comandos por finalidade, não uma sequência que dispense pré-requisitos.
+
 ```bash
-polis gates --repo . --policy /outside/policy.json --affected
-polis implementation-plan --repo /repo \
-  --contract /outside/locked-v6.json \
-  --out /outside/implementation-plan.json
+polis gates --repo . --policy "$POLIS_OUTSIDE/policy.json" --affected
+polis implementation-plan --repo . \
+  --policy "$POLIS_OUTSIDE/policy.json" \
+  --contract "$POLIS_OUTSIDE/locked-v6.json" \
+  --out "$POLIS_OUTSIDE/implementation-plan.json"
 ```
 
 ## Construção de entrega
@@ -53,9 +60,9 @@ polis implementation-plan --repo /repo \
 | `build` | Valida e cria um pacote verificável em diretório fisicamente externo, com `--jobs 1..16`. |
 
 ```bash
-polis start --repo /repo --policy /outside/policy-v3.json \
-  --contract /outside/draft-v5.json \
-  --out /outside/locked-v6.json
+polis start --repo . --policy "$POLIS_OUTSIDE/policy.json" \
+  --contract "$POLIS_OUTSIDE/draft-v5.json" \
+  --out "$POLIS_OUTSIDE/locked-v6.json"
 ```
 
 ## Leitura e consumo

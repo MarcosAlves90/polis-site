@@ -11,9 +11,13 @@ source: docs/policy-and-validation.md
 
 ## Begin with inspection
 
+Run in a Git checkout with a root Go module. Select a directory outside the repository; if you set `POLIS_OUTSIDE` yourself, confirm it is also outside the checkout:
+
 ```bash
-polis init --repo . --profile auto --dry-run > /outside/policy.json
-polis plan --repo . --policy /outside/policy.json
+POLIS_OUTSIDE="${POLIS_OUTSIDE:-$(mktemp -d)}"
+mkdir -p "$POLIS_OUTSIDE"
+polis init --repo . --profile auto --dry-run > "$POLIS_OUTSIDE/policy.json"
+polis plan --repo . --policy "$POLIS_OUTSIDE/policy.json"
 ```
 
 `auto` recognizes root Go modules. Other ecosystems use `--profile custom` with explicitly declared commands. Do not blindly reuse language-specific gates across projects. `--dry-run` emits policy without installing it in the repository: the plan above explicitly reads that output.

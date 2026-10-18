@@ -25,9 +25,11 @@ POLIS uses stable exit categories for automation, without conflating different f
 
 Exit status is only the most compact signal. Read the contextual diagnostic and, where appropriate, structured output:
 
+These are **independent examples**, not an end-to-end sequence. For `plan`, first prepare a valid JSON policy outside the checkout (or omit `--policy` only if `.polis/policy.json` is unchanged and committed in `HEAD`). For `preflight`, obtain a real package and consumer repository first.
+
 ```bash
 polis doctor --format json
-polis plan --repo . --format json
+polis plan --repo . --policy /outside/policy.json --format json
 polis preflight --repo /consumer --format json artifact.polis
 ```
 

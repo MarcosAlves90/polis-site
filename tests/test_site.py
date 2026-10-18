@@ -1,5 +1,6 @@
 """Build contract checks: navigation, links, metadata, document safety and paths."""
 import json
+import re
 import sys
 import unittest
 from pathlib import Path
@@ -362,6 +363,43 @@ class SiteTests(unittest.TestCase):
                 self.assertIn(repo_doctor, source)
                 self.assertLess(source.index(init_command), source.index(repo_doctor))
                 self.assertNotIn('polis doctor --repo .\n', source)
+
+    def test_external_policy_examples_create_output_path_and_preserve_binding(self):
+        """Standalone initial examples must not assume a committed or missing policy."""
+        for locale in (Path('content'), Path('content/en')):
+            commands = (ROOT / locale / 'comandos.md').read_text(encoding='utf-8')
+            policy = (ROOT / locale / 'politica-de-projeto.md').read_text(encoding='utf-8')
+            exits = (ROOT / locale / 'codigos-de-saida.md').read_text(encoding='utf-8')
+            for body in (commands, policy):
+                self.assertIn('POLIS_OUTSIDE="${POLIS_OUTSIDE:-$(mktemp -d)}"', body)
+                self.assertIn('mkdir -p "$POLIS_OUTSIDE"', body)
+                self.assertIn('polis init --repo . --profile auto --dry-run > "$POLIS_OUTSIDE/policy.json"', body)
+                self.assertLess(body.index('mkdir -p "$POLIS_OUTSIDE"'),
+                                body.index('polis init --repo . --profile auto --dry-run'))
+            self.assertIn('--policy "$POLIS_OUTSIDE/policy.json"', commands)
+            self.assertRegex(commands, r'polis implementation-plan --repo \. \\\n\s+--policy "\$POLIS_OUTSIDE/policy\.json"')
+            self.assertIn('polis plan --repo . --policy /outside/policy.json --format json', exits)
+            self.assertNotIn('polis plan --repo . --format json', exits)
+
+    def test_localized_cli_snippets_keep_the_same_commands(self):
+        """English and Portuguese examples should not silently diverge in CLI operations."""
+        for pt in (ROOT / 'content').glob('*.md'):
+            en = ROOT / 'content' / 'en' / pt.name
+            self.assertTrue(en.is_file(), pt)
+            meta_pt = frontmatter(pt)
+            meta_en = frontmatter(en)
+            for key in ('group', 'order', 'source'):
+                self.assertEqual(meta_pt[key], meta_en[key], (pt.name, key))
+            def fences(path):
+                return re.findall(r'```([^\n]*)\n(.*?)\n```', path.read_text(encoding='utf-8'), flags=re.S)
+            pt_fences = fences(pt)
+            en_fences = fences(en)
+            self.assertEqual([kind for kind, _ in pt_fences], [kind for kind, _ in en_fences], pt)
+            for (_, pt_body), (_, en_body) in zip(pt_fences, en_fences):
+                def operations(body):
+                    normalized = re.sub(r'\\\n\s*', ' ', body)
+                    return re.findall(r'(?m)^\s*polis\s+(\S+)', normalized)
+                self.assertEqual(operations(pt_body), operations(en_body), pt)
 
 
 if __name__ == '__main__':

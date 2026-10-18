@@ -10,9 +10,13 @@ A **Project Policy** descreve como o POLIS valida um projeto: seus comandos, gat
 
 ## Comece pela inspeção
 
+Execute em um checkout Git com módulo Go na raiz. Escolha um diretório externo ao repositório; se definir `POLIS_OUTSIDE` manualmente, confirme que ele também está fora do checkout:
+
 ```bash
-polis init --repo . --profile auto --dry-run > /outside/policy.json
-polis plan --repo . --policy /outside/policy.json
+POLIS_OUTSIDE="${POLIS_OUTSIDE:-$(mktemp -d)}"
+mkdir -p "$POLIS_OUTSIDE"
+polis init --repo . --profile auto --dry-run > "$POLIS_OUTSIDE/policy.json"
+polis plan --repo . --policy "$POLIS_OUTSIDE/policy.json"
 ```
 
 `auto` detecta módulos Go na raiz. Outros ecossistemas usam `--profile custom` e comandos explícitos. Não copie cegamente gates de uma linguagem para outra. `--dry-run` emite a política sem instalá-la no repositório: o plano acima recebe o arquivo gerado explicitamente.

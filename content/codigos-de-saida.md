@@ -24,9 +24,11 @@ O POLIS mantém categorias estáveis de saída para automação, sem transformar
 
 Um exit status é apenas o nível mais compacto da informação. Sempre leia a mensagem contextual e, quando apropriado, a saída estruturada:
 
+Os comandos abaixo são **exemplos independentes**, não uma sequência completa. Para `plan`, prepare antes uma política JSON válida fora do checkout (ou omita `--policy` apenas se `.polis/policy.json` já estiver inalterado e commitado em `HEAD`). Para `preflight`, obtenha primeiro um pacote real e um repositório consumidor.
+
 ```bash
 polis doctor --format json
-polis plan --repo . --format json
+polis plan --repo . --policy /outside/policy.json --format json
 polis preflight --repo /consumer --format json artifact.polis
 ```
 
