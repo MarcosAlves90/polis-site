@@ -98,6 +98,6 @@ uv pip install --python .venv/bin/python -r requirements.txt
 node --check assets/app.js
 ```
 
-The build produces 20 Portuguese and 20 English documentation pages, with distinct navigation
+The build currently produces 22 Portuguese and 22 English documentation pages, with distinct navigation
 routes and search indexes. Inspect both locales when editing shared templates or styling.
 Do not commit generated `dist/` files. See [README.md](README.md) for hosting details.

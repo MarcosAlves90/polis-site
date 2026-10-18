@@ -1,13 +1,13 @@
 ---
 slug: delivery-workflow
 title: Delivery workflow
-description: How producers prepare, prove, package, and deliver changes for independent consumer validation.
+description: Shared contracts and proof for POLIS 6.12.0 local and remote workflows.
 group: Fluxo de entrega
 order: 1
-source: docs/usage.md
+source: docs/quickstart.md
 ---
 
-The POLIS lifecycle separates **producing a delivery** from **consumer acceptance**. Consumers must not inherit trust from the producer's machine.
+POLIS supports **two workflows**. Agents already editing the target checkout can use `workspace validate` to save an external report without a package. A different consumer checkout needs an external `.polis` package independently checked before acceptance. See [Local workspace validation](../local-workspace-validation/) and [Remote delivery](../remote-delivery/).
 
 ## Step 1 — Prepare the change
 
@@ -40,20 +40,21 @@ polis capture-red --repo /repo \
 
 `capture-red` requires a test-only delta and a failure matching the contract oracle. A `behavior_preserving` change uses Green-to-Green instead; it does not invent a Red failure.
 
-## Step 3 — Implement and validate
+## Step 3 — Implement and choose the destination
 
-Edit only authorized paths and preserve captured tests. Validate the working tree without building a delivery package:
+Edit only authorized paths and preserve captured tests. **If this is the checkout under review**, validate locally without producing a delivery package:
 
 ```bash
 polis workspace validate --repo /repo \
   --contract /outside/locked-v6.json \
   --policy /outside/policy-v3.json \
-  --regression-patch /outside/regression.patch
+  --regression-patch /outside/regression.patch \
+  --out-report /outside/workspace-validation.json
 ```
 
-You may generate an optional contract-bound Implementation Plan after `start`. If used, pass the exact same plan bytes to subsequent commands that require them.
+This completes the **local** validation path; its report is not a transferable package. You may generate an optional contract-bound Implementation Plan after `start`. If used, pass the exact same plan bytes to subsequent commands that require them.
 
-## Step 4 — Build and verify the artifact
+## Step 4 — Only for another checkout: build and verify the artifact
 
 ```bash
 polis build --repo /repo \
@@ -67,9 +68,9 @@ polis verify /outside/output/artifact.polis
 polis inspect /outside/output/artifact.polis
 ```
 
-Confirm the actual output paths and filenames from command output. This example illustrates an unplanned Red-to-Green delivery, not a universal command for every change.
+`--out` must resolve to a directory **physically outside** the producer repository. The package is disposable and is never retained under `.polis/artifacts/packages/`. Read the actual generated filename from command output; `artifact.polis` is illustrative. This Red-to-Green example is not required for local validation.
 
-## Step 5 — Consume in a target repository
+## Step 5 — Remote delivery only: consume in another repository
 
 ```bash
 polis preflight --repo /consumer /outside/output/artifact.polis
@@ -82,4 +83,4 @@ polis apply --repo /consumer /outside/output/artifact.polis
 
 ## Repository isolation
 
-In the canonical workflow, the policy, locked contract, Red proof, package, and signature remain **outside the target worktree**. POLIS also supports explicitly configured retention in `.polis/artifacts/`. See the [official operational guide](https://github.com/MarcosAlves90/polis/blob/main/docs/usage.md#repository-artifact-retention).
+Policy, locked contract, Red proof, workspace report, package, and signature belong **outside the worktree** in the recommended workflow. Optional `.polis/artifacts/` retention covers selected records, contracts and evidence, **never new delivery packages**. See the [official retention reference](https://github.com/MarcosAlves90/polis/blob/main/docs/retention.md).

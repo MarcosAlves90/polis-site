@@ -4,10 +4,10 @@ title: Core concepts
 description: A glossary of the main POLIS objects, responsibilities, and result states.
 group: Comece aqui
 order: 4
-source: docs/usage.md
+source: spec/POLIS-SPEC-v6.md
 ---
 
-Before building a delivery package, distinguish the core objects of the protocol.
+Before validating a checkout or packaging a change for another consumer, distinguish the core objects of the protocol.
 
 ## Glossary
 
@@ -21,6 +21,7 @@ Before building a delivery package, distinguish the core objects of the protocol
 | **Green-to-Green** | Characterization that passes both before and after a behavior-preserving change. |
 | **Evidence** | Bounded structured records of commands, proof, and validation decisions. |
 | **Gate** | A policy-configured check with explicit prerequisites and outcomes. |
+| **Workspace checkpoint** | Externally saved local validation report tied to observed identities, without a delivery package. |
 | **`.polis`** | A verifiable delivery package, distinct from the offline runtime bundle. |
 | **Preflight** | Validation against the consumer environment without applying a change. |
 

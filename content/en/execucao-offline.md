@@ -3,7 +3,7 @@ slug: offline-runtime
 title: Offline runtime
 description: Distribute POLIS to agents and machines without installing Go or requiring network access.
 group: Fluxo de entrega
-order: 6
+order: 8
 source: spec/POLIS-OFFLINE.md
 ---
 

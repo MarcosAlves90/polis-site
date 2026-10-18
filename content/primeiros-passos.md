@@ -1,12 +1,12 @@
 ---
 title: Primeiros passos
-description: Um caminho inicial para instalar, diagnosticar e inspecionar a validação de um repositório.
+description: Primeiro fluxo do POLIS 6.12.0 para validar um checkout local ou entregar a outro checkout.
 group: Comece aqui
 order: 3
-source: docs/usage.md
+source: docs/quickstart.md
 ---
 
-Este tutorial apresenta os comandos iniciais e distingue **inspeção de configuração** de **entrega verificada**. Uma execução bem-sucedida de `plan` ou `gates` não significa que um pacote `.polis` tenha sido criado.
+Este tutorial começa pela verificação do ambiente e separa duas possibilidades: **validar o checkout em que você já trabalha** ou **entregar um pacote a outro checkout**. Uma execução bem-sucedida de `plan` ou `gates` não significa que um pacote `.polis` tenha sido criado.
 
 ## 1. Instale e diagnostique
 
@@ -15,7 +15,7 @@ go install github.com/MarcosAlves90/polis/v6/cmd/polis@latest
 polis doctor
 ```
 
-O comando `doctor` verifica os pré-requisitos da CLI. Consulte [Instalação](../instalacao/) caso o binário não esteja no `PATH`.
+O comando `doctor` verifica os pré-requisitos da CLI. Depois de entrar no repositório, `doctor --repo .` acrescenta verificações estáticas de política e ferramentas, sem executar gates. Consulte [Instalação](../instalacao/) caso o binário não esteja no `PATH`.
 
 ## 2. Escolha um repositório Git
 
@@ -24,21 +24,25 @@ Use um repositório que você possa inspecionar. O POLIS identifica o estado do 
 ```bash
 cd /caminho/do/seu-projeto
 git status --short
+polis doctor --repo .
 ```
 
 Não descarte alterações locais para satisfazer a CLI. O fluxo de bloqueio do POLIS existe justamente para impedir que um estado ambíguo seja aceito silenciosamente.
 
-## 3. Inspecione a política sem escrever arquivos
+## 3. Prepare a política externa, sem alterar o checkout
 
 Em um módulo Go raiz, o perfil automático pode gerar uma política adequada ao ambiente. Para visualizar sua geração sem persistir arquivos:
 
 ```bash
-polis init --repo . --profile auto --dry-run
+# Mantenha saídas temporárias fora do worktree.
+POLIS_OUTSIDE="${POLIS_OUTSIDE:-$(mktemp -d)}"
+mkdir -p "$POLIS_OUTSIDE"
+polis init --repo . --profile auto --dry-run > "$POLIS_OUTSIDE/policy.json"
 ```
 
 A detecção automática do perfil `auto` reconhece módulos Go na raiz. Para outros ecossistemas, o perfil `custom` exige configuração explícita dos comandos.
 
-Se você optar por criar a política no repositório, execute `init` sem `--dry-run` e **revise o resultado antes de versioná-lo**:
+Se você optar por versionar a política no repositório, execute `init` sem `--dry-run` e **revise a política e `.polis/policy-provenance.json` antes de commitá-los**:
 
 ```bash
 polis init --repo . --profile auto
@@ -47,19 +51,22 @@ polis init --repo . --profile auto
 ## 4. Veja o plano de validação
 
 ```bash
-polis plan --repo .
+polis plan --repo . --policy "$POLIS_OUTSIDE/policy.json"
 ```
 
 `plan` é somente leitura: apresenta os gates habilitados, dependências, comandos e garantias ou limitações da política efetiva. Para executá-los localmente:
 
 ```bash
-polis gates --repo .
+polis gates --repo . --policy "$POLIS_OUTSIDE/policy.json"
 ```
 
-> `gates` valida comandos do projeto, mas não cria nem verifica artefatos de entrega. Para isso, é necessário passar pelo contrato bloqueado, pelas provas exigidas e por `build` + `verify`.
+> `gates` executa verificações locais, mas não cria nem verifica artefatos de entrega. `--affected` e `--reuse` podem executar somente parte dos gates; para uma entrega continuam obrigatórios os checks completos e as provas do contrato.
 
-## 5. Avance para uma entrega
+## 5. Escolha o caminho de validação
 
-Uma entrega completa exige especificação de comportamento, Change Contract, escopo autorizado e estratégia de prova. Esses arquivos têm esquemas e pré-condições definidos na especificação; não devem ser improvisados a partir de um trecho isolado.
+Os dois caminhos exigem Specification, Change Contract bloqueado, escopo autorizado e prova de desenvolvimento adequada. Esses arquivos têm esquemas e pré-condições definidos na especificação; não devem ser improvisados a partir de um trecho isolado.
 
-Siga o [Fluxo de entrega](../fluxo-de-entrega/) e depois [SDD e TDD](../sdd-tdd/). Os exemplos de CLI dessa documentação são **modelos de sintaxe**, não substituem contratos reais válidos.
+- **Mesmo checkout:** siga [Validação local](../validacao-local/) com `polis workspace validate`, que produz um checkpoint externo, sem pacote.
+- **Outro checkout:** siga [Entrega remota](../entrega-remota/) com `polis build`, `verify`, `preflight` e `apply`, criando um pacote externo e descartável.
+
+Veja também [SDD e TDD](../sdd-tdd/). Os comandos mostrados são exemplos de sintaxe, não contratos completos prontos para produção.

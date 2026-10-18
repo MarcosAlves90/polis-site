@@ -4,7 +4,7 @@ title: Architecture
 description: How the engineering guide, normative specification, and Go CLI work together.
 group: Projeto
 order: 1
-source: docs/usage.md
+source: README.md
 ---
 
 POLIS separates **engineering process**, **verifiable contracts**, and **executable implementation**. This prevents narrative guidance from silently redefining the meaning of package bytes.
@@ -25,7 +25,7 @@ If an Engineering Guide explanation conflicts with a package rule, the **version
 
 ## Producer and consumer
 
-The producer executes development proof and produces a target Git tree and `.polis` package. The consumer receives untrusted bytes, validates integrity and applicable rules, and performs its own checks before any mutation.
+An agent already editing the target checkout can produce development proof and validate the resulting tree with `workspace validate`, without a package. For remote handoff the producer also builds a `.polis` package. The consumer receives untrusted bytes, validates integrity and applicable rules, and performs its own checks before any mutation.
 
 This separation limits claims such as “it passed on the author's machine”: consumer identity, source state, and effective commands also matter.
 

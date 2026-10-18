@@ -3,7 +3,7 @@ title: Política do projeto
 description: Configure validações explícitas com Project Policy schema v3 e entenda os níveis strict, standard e minimal.
 group: Conceitos e segurança
 order: 2
-source: docs/usage.md
+source: docs/policy-and-validation.md
 ---
 
 A **Project Policy** descreve como o POLIS valida um projeto: seus comandos, gates, dependências, ambientes e decisões de habilitação. A política efetiva é ligada por digest ao Change Contract bloqueado.
@@ -11,11 +11,15 @@ A **Project Policy** descreve como o POLIS valida um projeto: seus comandos, gat
 ## Comece pela inspeção
 
 ```bash
-polis init --repo . --profile auto --dry-run
-polis plan --repo .
+polis init --repo . --profile auto --dry-run > /outside/policy.json
+polis plan --repo . --policy /outside/policy.json
 ```
 
-`auto` detecta módulos Go na raiz. Outros ecossistemas usam `--profile custom` e comandos explícitos. Não copie cegamente gates de uma linguagem para outra.
+`auto` detecta módulos Go na raiz. Outros ecossistemas usam `--profile custom` e comandos explícitos. Não copie cegamente gates de uma linguagem para outra. `--dry-run` emite a política sem instalá-la no repositório: o plano acima recebe o arquivo gerado explicitamente.
+
+## Proveniência das decisões
+
+Desde `v6.11.1`, `polis plan --format json` (plano versão 4) informa `source` e `reason` para nível de validação, gates, dependências, decisões do produtor/consumidor e garantias. `polis init` sem `--dry-run` também grava `.polis/policy-provenance.json`: revise e versione **esse manifesto junto de `.polis/policy.json`**. A atribuição a um perfil gerado vale apenas enquanto os digests persistidos coincidirem. Alterações de política e políticas legadas são classificadas conservadoramente; proveniência declarada não é autenticação de autoria.
 
 ## Níveis de validação
 
@@ -54,6 +58,8 @@ Exemplo conceitual do campo de comando:
 ## Dependências e concorrência
 
 Os gates podem declarar `depends_on`. O POLIS valida o grafo de dependências e computa ordem determinística. Paralelismo só ocorre com declarações de segurança de execução concorrente; cobertura mantém execução exclusiva.
+
+Gates de comando podem declarar `input_paths_complete: true` **somente se** os `input_paths` abrangerem todas as entradas utilizadas, permitindo reúso vinculado ao subconjunto. Essa declaração é responsabilidade do autor da política: não detecta dependências externas ocultas. Gates de cobertura continuam com identidade global e leitores antigos estritos da política podem rejeitar esse campo novo. Consulte [Validação e gates](../validacao/).
 
 ## Mudanças de política exigem novo contrato
 

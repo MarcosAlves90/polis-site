@@ -3,7 +3,7 @@ title: Arquitetura
 description: Entenda como o guia de engenharia, a especificação normativa e a CLI Go trabalham juntos.
 group: Projeto
 order: 1
-source: docs/usage.md
+source: README.md
 ---
 
 A arquitetura do POLIS separa **processo de engenharia**, **contratos verificáveis** e **implementação executável**. Essa divisão é importante para evitar que instruções narrativas alterem silenciosamente o significado dos pacotes.
@@ -24,7 +24,7 @@ Se uma explicação do guia de engenharia divergir de uma regra de pacote da Spe
 
 ## Produtor e consumidor
 
-O produtor executa provas de desenvolvimento e produz uma árvore alvo e um `.polis`. O consumidor recebe bytes não confiáveis, verifica a integridade e as regras aplicáveis e executa sua própria validação antes de permitir mutações.
+Um agente no próprio checkout produz provas de desenvolvimento e pode validar sua árvore alvo com `workspace validate`, sem pacote. Quando há transferência, o produtor também constrói um `.polis`. O consumidor recebe bytes não confiáveis, verifica a integridade e as regras aplicáveis e executa sua própria validação antes de permitir mutações.
 
 Essa separação limita o valor de uma afirmação como “passou na máquina do autor”: o estado e os comandos efetivos do consumidor importam.
 

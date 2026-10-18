@@ -2,8 +2,8 @@
 title: Validação e gates
 description: Execute políticas de qualidade, entenda pré-requisitos e diferencie validação local de um artefato de entrega.
 group: Fluxo de entrega
-order: 3
-source: docs/usage.md
+order: 5
+source: docs/gates-and-progress.md
 ---
 
 Um **gate** é uma verificação definida pela Project Policy. Pode representar testes, cobertura, lint ou outro comando configurado. A política controla os checks do projeto; os invariantes de integridade e segurança do protocolo continuam obrigatórios.
@@ -11,7 +11,7 @@ Um **gate** é uma verificação definida pela Project Policy. Pode representar 
 ## Inspecione antes de executar
 
 ```bash
-polis plan --repo .
+polis plan --repo . --policy /outside/policy.json
 ```
 
 `plan` não executa os gates. Ele apresenta ordem, comandos, dependências, habilitações e limitações da política efetiva.
@@ -19,14 +19,14 @@ polis plan --repo .
 ## Execute a validação local
 
 ```bash
-polis gates --repo .
+polis gates --repo . --policy /outside/policy.json
 ```
 
 Para validar somente um conjunto explícito ou as verificações afetadas pelas mudanças Git:
 
 ```bash
-polis gates --repo . --gate lint --gate coverage
-polis gates --repo . --affected
+polis gates --repo . --policy /outside/policy.json --gate lint --gate coverage
+polis gates --repo . --policy /outside/policy.json --affected
 ```
 
 Dependências necessárias são adicionadas à seleção. `--jobs` aceita de 1 a 16; gates só podem concorrer quando a política declara sua execução paralela segura. Cobertura permanece exclusiva.
@@ -39,15 +39,23 @@ Uma execução pode salvar um manifesto de resultados. O POLIS permite inspecion
 
 ```bash
 polis gates --repo . --environment-id toolchain-v1 \
-  --out-run /outside/first.json
+  --policy /outside/policy.json --out-run /outside/first.json
 
 polis gates --inspect-run /outside/first.json
 
 polis gates --repo . --environment-id toolchain-v1 \
-  --reuse /outside/first.json
+  --policy /outside/policy.json --reuse /outside/first.json
 ```
 
 O identificador de ambiente é **declarado por quem executa**; não prova isolamento hermético nem que o ambiente físico realmente corresponde ao nome. Sem identificador, não há reutilização. Resultados prévios não são prova permanente de um estado alterado.
+
+Por padrão, o reúso exige a identidade global do código, Git, índice, política, dependências e ambiente. Gates de **comando** com `input_paths` exaustivos e `input_paths_complete: true` podem optar pelo reúso restrito a esses caminhos, incluindo arquivos ignorados, diretórios vazios e mudanças de topologia. A declaração não garante que um comando deixe de ler entradas externas; cobertura continua global. Gates omitidos ou reutilizados não substituem todos os gates obrigatórios de `build` ou `apply`.
+
+Para replay completo da seleção anterior, use `polis gates --repo . --policy /outside/policy.json --replay /outside/first.json --environment-id toolchain-v1` com a mesma política original. Não combine replay com `--affected`, `--gate`, `--jobs` ou `--reuse`.
+
+## Acompanhar progresso
+
+Com `--format json`, eventos de progresso `started` e `completed` de comandos e gates executados chegam em **JSON Lines no stderr**, enquanto o resultado normal fica no stdout. Eventos incluem operação, motivo, escopo, identificador, estado e duração na conclusão. Gates reutilizados ou omitidos não emitem eventos de execução; consulte seus estados no resultado final. Em caso de erro JSON, o registro estruturado de falha permanece como o último registro não relacionado a progresso no stderr.
 
 ## PASS, FAIL, BLOCKED e DEFERRED
 

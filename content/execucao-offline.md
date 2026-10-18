@@ -2,7 +2,7 @@
 title: Execução offline
 description: Distribua o runtime do POLIS para agentes e máquinas sem instalar Go ou acessar a rede.
 group: Fluxo de entrega
-order: 6
+order: 8
 source: spec/POLIS-OFFLINE.md
 ---
 

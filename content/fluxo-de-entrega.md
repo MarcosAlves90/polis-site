@@ -1,12 +1,12 @@
 ---
 title: Fluxo de entrega
-description: Como o produtor prepara, prova, empacota e entrega mudanças para um consumidor independente.
+description: Contratos e provas comuns aos caminhos local e remoto do POLIS 6.12.0.
 group: Fluxo de entrega
 order: 1
-source: docs/usage.md
+source: docs/quickstart.md
 ---
 
-O ciclo do POLIS é intencionalmente dividido em **produção de uma entrega** e **aceitação pelo consumidor**. O consumidor não deve herdar confiança do ambiente do produtor.
+O POLIS oferece **dois fluxos**. No checkout em que um agente já trabalha, a validação gera um relatório externo com `workspace validate`, sem pacote. Para transferir a mudança a outro checkout, o produtor cria um pacote `.polis` externo, e o consumidor decide se o aceita. Confira [Validação local](../validacao-local/) e [Entrega remota](../entrega-remota/).
 
 ## Etapa 1 — Preparar a mudança
 
@@ -39,20 +39,21 @@ polis capture-red --repo /repo \
 
 `capture-red` requer um delta que altere somente os testes e uma falha que corresponda ao oráculo definido no contrato. Mudanças `behavior_preserving` usam Green-to-Green; não fabricam uma falha para atender a um ritual.
 
-## Etapa 3 — Implementar e validar
+## Etapa 3 — Implementar e escolher o destino
 
-Implemente apenas arquivos dentro do escopo e preserve os testes capturados. A validação pode ser executada no espaço de trabalho sem criar um pacote:
+Implemente apenas arquivos dentro do escopo e preserve os testes capturados. **Se a alteração será revisada neste mesmo checkout**, valide-a no workspace sem criar pacote:
 
 ```bash
 polis workspace validate --repo /repo \
   --contract /outside/locked-v6.json \
   --policy /outside/policy-v3.json \
-  --regression-patch /outside/regression.patch
+  --regression-patch /outside/regression.patch \
+  --out-report /outside/workspace-validation.json
 ```
 
-Um Implementation Plan vinculado ao contrato pode ser gerado após `start`. É opcional, mas, se utilizado, os mesmos bytes devem ser fornecidos às etapas que os exigem.
+Esse é o fim da validação **local**; o relatório não é um pacote transferível. Um Implementation Plan vinculado ao contrato pode ser gerado após `start`. É opcional, mas, se utilizado, os mesmos bytes devem ser fornecidos às etapas que os exigem.
 
-## Etapa 4 — Construir e verificar o pacote
+## Etapa 4 — Somente para outro checkout: construir e verificar pacote
 
 ```bash
 polis build --repo /repo \
@@ -66,9 +67,9 @@ polis verify /outside/output/artifact.polis
 polis inspect /outside/output/artifact.polis
 ```
 
-Os caminhos e nomes de saída devem ser confirmados na execução real. O exemplo descreve um fluxo Red-to-Green não planejado, não um comando universal para qualquer mudança.
+`--out` precisa resolver para um diretório **fisicamente externo** ao repositório produtor. O pacote é descartável e nunca é retido em `.polis/artifacts/packages/`. Os nomes gerados devem ser lidos da saída real; `artifact.polis` é apenas ilustrativo. Este exemplo Red-to-Green não é uma etapa obrigatória do fluxo local.
 
-## Etapa 5 — Consumir em outro repositório
+## Etapa 5 — Somente no fluxo remoto: consumir em outro repositório
 
 ```bash
 polis preflight --repo /consumer /outside/output/artifact.polis
@@ -81,4 +82,4 @@ Preflight não modifica o código consumidor; `apply` repete a validação antes
 
 ## Princípio de isolamento
 
-No fluxo canônico, a política, o contrato bloqueado, a prova Red, o pacote e a assinatura ficam **fora do worktree** do projeto. O POLIS também oferece retenção opcional em `.polis/artifacts/`, configurada explicitamente. Veja a [documentação operacional oficial](https://github.com/MarcosAlves90/polis/blob/main/docs/usage.md#repository-artifact-retention).
+Política, contrato bloqueado, prova Red, relatório de workspace, pacote e assinatura devem permanecer **fora do worktree** no fluxo recomendado. A retenção opcional em `.polis/artifacts/` cobre alguns registros, contratos e evidências, **nunca novos pacotes de entrega**. Leia a [referência oficial de retenção](https://github.com/MarcosAlves90/polis/blob/main/docs/retention.md).

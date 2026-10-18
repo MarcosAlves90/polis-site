@@ -3,8 +3,8 @@ slug: safe-application
 title: Safe application
 description: Understand consumer preflight, apply revalidation, and explicitly authorized local commit modes.
 group: Fluxo de entrega
-order: 5
-source: docs/usage.md
+order: 7
+source: docs/commands.md
 ---
 
 Consumers must verify a delivery against **their own current Git state and environment**. A producer PASS or past preflight PASS is not permanent authorization to modify files.

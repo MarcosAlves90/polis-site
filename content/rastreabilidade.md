@@ -15,7 +15,7 @@ Uma mudança estrita conecta:
 1. Requisitos identificados na Specification.
 2. Critérios de aceite vinculados a esses requisitos.
 3. Provas de desenvolvimento e gates definidos pelo contrato e política.
-4. Um alvo Git identificado e um pacote verificável.
+4. Um alvo Git identificado e um checkpoint do workspace, ou um pacote verificável se houver entrega remota.
 
 Quando há Implementation Plan opcional, etapas de testes e implementação são relacionadas aos requisitos e critérios, e o plano se torna parte do artefato formato v6.
 
@@ -28,6 +28,8 @@ Isso ajuda a limitar tamanho e exposição de dados, mas significa que uma pesso
 ## Registros históricos não são estado atual
 
 Manifestos de `polis gates` e checkpoints do workspace podem ajudar a retomar trabalho, mas um relatório histórico não substitui a validação de um alvo que mudou. A identidade das entradas e do ambiente precisa ser reavaliada.
+
+`polis status` identifica estados `proven`, `stale_or_unproven` e `missing` para diferenciar prova verificada de informação histórica ou ausente. Em `polis plan`, a proveniência `source`/`reason` do JSON v4 explica decisões de política, dependências e garantias; não é uma assinatura de autoria.
 
 ## Consultar a rastreabilidade
 

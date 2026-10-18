@@ -16,7 +16,7 @@ A strict change connects:
 1. Identifiable requirements in the Specification.
 2. Acceptance criteria linked to those requirements.
 3. Development proof and gates prescribed by the contract and policy.
-4. An identified Git target tree and verifiable delivery package.
+4. An identified Git target tree and a workspace checkpoint, or a verifiable package when handing off to another checkout.
 
 With an optional Implementation Plan, test and implementation steps link to requirements and acceptance criteria; the plan becomes part of a format-v6 package.
 
@@ -29,6 +29,8 @@ This limits size and potentially sensitive output exposure, but means full execu
 ## Historical records are not current validation
 
 `polis gates` run manifests and workspace checkpoints help resume work, but an old report cannot substitute for validation of changed source. Input and declared environment identities must be re-evaluated.
+
+`polis status` uses `proven`, `stale_or_unproven`, and `missing` to distinguish verified evidence from historical or absent information. The `source`/`reason` provenance in `polis plan` JSON v4 explains policy, dependency, and guarantee decisions; it is not an authorship signature.
 
 ## Inspect traceability
 

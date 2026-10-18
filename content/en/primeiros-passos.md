@@ -1,13 +1,13 @@
 ---
 slug: quickstart
 title: Quickstart
-description: Install, diagnose, and inspect validation for a Git repository before preparing a delivery.
+description: Start with POLIS 6.12.0 and choose local checkout validation or remote delivery.
 group: Comece aqui
 order: 3
-source: docs/usage.md
+source: docs/quickstart.md
 ---
 
-This guide introduces the first commands and distinguishes **configuration inspection** from a **verified delivery**. A successful `plan` or `gates` run does not mean that a `.polis` package exists.
+This guide first checks prerequisites, then distinguishes **validation in your existing checkout** from **package delivery to another checkout**. A successful `plan` or `gates` run does not mean that a `.polis` package exists.
 
 ## 1. Install and diagnose
 
@@ -16,7 +16,7 @@ go install github.com/MarcosAlves90/polis/v6/cmd/polis@latest
 polis doctor
 ```
 
-`doctor` checks CLI prerequisites. See [Installation](../installation/) if the binary is not on `PATH`.
+`doctor` checks CLI prerequisites. After entering the target checkout, run `doctor --repo .` to inspect policy and tooling statically without executing gates. See [Installation](../installation/) if the binary is not on `PATH`.
 
 ## 2. Choose a Git repository
 
@@ -25,21 +25,25 @@ Work in a repository whose state you can inspect. POLIS identifies the Git state
 ```bash
 cd /path/to/your/project
 git status --short
+polis doctor --repo .
 ```
 
 Do not discard local changes simply to satisfy the CLI. POLIS intentionally blocks ambiguous states rather than silently accepting them.
 
-## 3. Preview policy generation without writing files
+## 3. Prepare an external policy without modifying the checkout
 
 For a root Go module, `auto` can generate a profile. Preview it without persisting files:
 
 ```bash
-polis init --repo . --profile auto --dry-run
+# Keep temporary outputs outside the worktree.
+POLIS_OUTSIDE="${POLIS_OUTSIDE:-$(mktemp -d)}"
+mkdir -p "$POLIS_OUTSIDE"
+polis init --repo . --profile auto --dry-run > "$POLIS_OUTSIDE/policy.json"
 ```
 
 Automatic profile detection supports root Go modules. Other ecosystems require explicit commands through the `custom` profile.
 
-If you decide to persist the policy, run `init` without `--dry-run` and **review the generated files before committing**:
+If you decide to persist the policy, run `init` without `--dry-run` and **review both the policy and `.polis/policy-provenance.json` before committing**:
 
 ```bash
 polis init --repo . --profile auto
@@ -48,19 +52,22 @@ polis init --repo . --profile auto
 ## 4. Inspect the validation plan
 
 ```bash
-polis plan --repo .
+polis plan --repo . --policy "$POLIS_OUTSIDE/policy.json"
 ```
 
 `plan` is read-only. It shows enabled gates, dependencies, commands, and the effective policy's guarantees and limitations. Run configured gates locally with:
 
 ```bash
-polis gates --repo .
+polis gates --repo . --policy "$POLIS_OUTSIDE/policy.json"
 ```
 
-> `gates` validates project commands; it does not create or verify a delivery artifact. That requires a locked contract, the required proof, and `build` followed by `verify`.
+> `gates` runs project checks but does not produce or verify a delivery package. `--affected` and `--reuse` may execute only a subset; full delivery gates and contract proof still apply.
 
-## 5. Prepare a full delivery
+## 5. Choose your validation workflow
 
-A complete delivery needs a behavioral Specification, Change Contract, authorized scope, and proof strategy. Their schemas and preconditions are normative and should not be improvised from an isolated command example.
+Both workflows require a behavioral Specification, locked Change Contract, authorized scope, and appropriate proof. Their schemas and prerequisites are normative and must not be improvised from an isolated command example.
 
-Continue with [Delivery workflow](../delivery-workflow/) and [SDD and TDD](../sdd-and-tdd/). Commands shown here illustrate **syntax**, not ready-made valid contracts.
+- **Same checkout:** follow [Local workspace validation](../local-workspace-validation/) using `polis workspace validate` to save an external checkpoint without building a package.
+- **Different checkout:** follow [Remote delivery](../remote-delivery/) using `polis build`, `verify`, `preflight`, and `apply` with an external disposable package.
+
+See also [SDD and TDD](../sdd-and-tdd/). Commands shown here illustrate syntax, not production-ready contracts.

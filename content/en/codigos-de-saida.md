@@ -4,7 +4,7 @@ title: Exit codes
 description: Interpret CLI exit statuses and distinguish validation failure from an execution blocker.
 group: Referência
 order: 2
-source: docs/usage.md
+source: docs/commands.md
 ---
 
 POLIS uses stable exit categories for automation, without conflating different failure modes into a generic result.

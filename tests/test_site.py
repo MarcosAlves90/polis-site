@@ -25,7 +25,8 @@ class SiteTests(unittest.TestCase):
         return BeautifulSoup(Path(path).read_text(encoding="utf-8"), "html.parser")
 
     def test_all_document_pages_generated(self):
-        self.assertEqual(len(self.pages), 20)
+        self.assertEqual(len(self.pages), len(list((ROOT / 'content').glob('*.md'))))
+        self.assertEqual(len(self.pages), 22)
         for file in self.pages + self.english_pages:
             parsed = self.soup(file)
             self.assertEqual(len(parsed.select('h1')), 1, file)
@@ -72,7 +73,7 @@ class SiteTests(unittest.TestCase):
                 self.assertIn(href[1:],ids,file)
 
     def test_complete_english_localization_and_switching(self):
-        self.assertEqual(len(self.english_pages), 20)
+        self.assertEqual(len(self.english_pages), len(self.pages))
         for file in self.english_pages:
             parsed = self.soup(file)
             self.assertEqual(parsed.html.get('lang'), 'en')
@@ -141,8 +142,8 @@ class SiteTests(unittest.TestCase):
 
     def test_english_search_index_is_language_scoped(self):
         index = json.loads((DIST/'en'/'search.json').read_text(encoding='utf-8'))
-        self.assertEqual(len(index), 20)
-        self.assertEqual(len({item['url'] for item in index}), 20)
+        self.assertEqual(len(index), len(self.english_pages))
+        self.assertEqual(len({item['url'] for item in index}), len(self.english_pages))
         for item in index:
             self.assertTrue(item['url'].startswith('/en/docs/'))
             self.assertTrue((DIST / item['url'].strip('/') / 'index.html').is_file())
@@ -231,11 +232,45 @@ class SiteTests(unittest.TestCase):
         self.assertEqual(page.select_one('nav.locale-switch a[lang="en"]')['href'], '/polis-site/en/docs/overview/')
         self.assertEqual(page.select_one('link[rel="alternate"][hreflang="en"]')['href'], 'https://example.com/polis-site/en/docs/overview/')
         self.assertEqual(en.select_one('link[rel="alternate"][hreflang="pt-BR"]')['href'], 'https://example.com/polis-site/docs/visao-geral/')
-        self.assertEqual((DIST/'sitemap.xml').read_text().count('<loc>'), 42)
+        self.assertEqual((DIST/'sitemap.xml').read_text().count('<loc>'), 2 + len(self.pages) + len(self.english_pages))
         self.assertEqual(page.select_one('meta[property="og:image"]')['content'], 'https://example.com/polis-site/assets/og-cover-pt.png')
         self.assertEqual(en.select_one('meta[property="og:image"]')['content'], 'https://example.com/polis-site/assets/og-cover-en.png')
         # Leave default deploy output for the final deliverable.
         build()
+
+    def test_v612_workflows_are_localized_and_distinct(self):
+        """POLIS v6.12.0 local validation and remote handoff have different outputs."""
+        for lang, local_slug, remote_slug, install_slug in [
+            ('', 'validacao-local', 'entrega-remota', 'instalacao'),
+            ('en/', 'local-workspace-validation', 'remote-delivery', 'installation'),
+        ]:
+            docs = DIST / lang / 'docs'
+            local = self.soup(docs / local_slug / 'index.html')
+            remote = self.soup(docs / remote_slug / 'index.html')
+            install = self.soup(docs / install_slug / 'index.html')
+            local_text = local.get_text(' ', strip=True)
+            remote_text = remote.get_text(' ', strip=True)
+            self.assertIn('workspace validate', local_text)
+            self.assertIn('workspace_validated', local_text)
+            self.assertIn('delivery_artifact_built', local_text)
+            self.assertIn('polis build', remote_text)
+            self.assertIn('preflight', remote_text)
+            self.assertIn('v6.12.0', install.get_text(' ', strip=True))
+            source = local.select_one('.doc-meta a[href]')
+            self.assertIsNotNone(source)
+            self.assertTrue(source['href'].endswith('/docs/workflows/local-agent-workspace.md'))
+
+        for homepage in (DIST / 'index.html', DIST / 'en' / 'index.html'):
+            html = homepage.read_text(encoding='utf-8')
+            self.assertIn('POLIS v6.12.0', html)
+            self.assertIn('POLIS_OUTSIDE', html)
+            self.assertIn('--policy', html)
+            self.assertIn('workspace validate', html)
+
+        for file in [*self.pages, *self.english_pages]:
+            html = file.read_text(encoding='utf-8')
+            self.assertNotIn('docs/usage.md#command-reference', html)
+            self.assertNotIn('docs/usage.md#repository-artifact-retention', html)
 
 
 if __name__ == '__main__':

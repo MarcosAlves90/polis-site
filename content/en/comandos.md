@@ -4,40 +4,41 @@ title: CLI commands
 description: A practical POLIS V6 command reference organized by workflow stage.
 group: Referência
 order: 1
-source: docs/usage.md
+source: docs/commands.md
 ---
 
-This page is a purpose-oriented index. For complete options, run **`polis help <command>`**, `polis <command> --help`, or consult the [official command reference](https://github.com/MarcosAlves90/polis/blob/main/docs/usage.md#command-reference).
+This page is a purpose-oriented index. For complete options, run **`polis help <command>`**, `polis <command> --help`, or consult the [official command reference](https://github.com/MarcosAlves90/polis/blob/main/docs/commands.md#agent-command-instructions), which is embedded in CLI help.
 
 ## Discovery and preparation
 
 | Command | Purpose |
 | --- | --- |
 | `help` | Show read-only syntax and operational guidance. |
-| `doctor` | Check CLI prerequisites and environment. |
-| `init` | Generate Project Policy using a chosen profile. |
-| `plan` | Preview effective policy, gates, dependencies, and assurances without execution. |
-| `status` | Summarize workflow state and the next step using supplied inputs. |
+| `doctor` | Check CLI prerequisites; `--repo` adds static repository checks with optional `--policy`. |
+| `init` | Generate Project Policy and, without `--dry-run`, a policy-provenance manifest. |
+| `plan` | Preview gates, guarantees, and decision sources/reasons without execution. Plan JSON v4. |
+| `status` | Project external workflow evidence and next actions (`proven`, `stale_or_unproven`, `missing`). |
 
 ```bash
 polis help
 polis help start
 polis doctor --format json
-polis init --repo . --dry-run
-polis plan --repo .
+polis doctor --repo .
+polis init --repo . --profile auto --dry-run > /outside/policy.json
+polis plan --repo . --policy /outside/policy.json --format json
 ```
 
 ## Validation and planning
 
 | Command | Purpose |
 | --- | --- |
-| `gates` | Execute Project Policy gates, including selected or affected subsets. |
-| `workspace validate` | Validate a locked change without producing a `.polis` package. |
+| `gates` | Execute Project Policy gates, including selected/affected subsets and conditional replay/reuse. |
+| `workspace validate` | Validate a locked change without a `.polis` package; accepts `--jobs 1..16`. |
 | `workspace status` | Compare source identity against an unauthenticated checkpoint. |
 | `implementation-plan` | Generate an optional plan derived from the locked contract. |
 
 ```bash
-polis gates --repo . --affected
+polis gates --repo . --policy /outside/policy.json --affected
 polis implementation-plan --repo /repo \
   --contract /outside/locked-v6.json \
   --out /outside/implementation-plan.json
@@ -50,7 +51,7 @@ polis implementation-plan --repo /repo \
 | `start` | Lock the contract to a baseline and effective policy. |
 | `check-red-scope` | Check that proposed test paths are authorized. |
 | `capture-red` | Capture genuine Red proof for a Red-to-Green change. |
-| `build` | Validate and produce a verifiable change package. |
+| `build` | Validate and write a package to a physically external directory; accepts `--jobs 1..16`. |
 
 ```bash
 polis start --repo /repo --policy /outside/policy-v3.json \

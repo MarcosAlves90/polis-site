@@ -3,7 +3,7 @@ title: Modos de baseline
 description: Como strict, compatible e permissive controlam a admissibilidade de um pacote em diferentes estados Git.
 group: Conceitos e segurança
 order: 3
-source: docs/usage.md
+source: docs/development-proof.md
 ---
 
 Um pacote é produzido contra uma linha de base bloqueada. O consumidor pode estar em um commit igual ou diferente, e o POLIS permite escolher explicitamente como essa diferença deve ser tratada.

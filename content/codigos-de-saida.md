@@ -3,7 +3,7 @@ title: Códigos de saída
 description: Interprete o exit status da CLI e saiba quando uma verificação foi bloqueada ou falhou.
 group: Referência
 order: 2
-source: docs/usage.md
+source: docs/commands.md
 ---
 
 O POLIS mantém categorias estáveis de saída para automação, sem transformar causas diferentes em uma aprovação genérica.

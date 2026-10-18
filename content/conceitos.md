@@ -3,10 +3,10 @@ title: Conceitos fundamentais
 description: Um glossário para reconhecer os principais objetos, responsabilidades e estados do POLIS.
 group: Comece aqui
 order: 4
-source: docs/usage.md
+source: spec/POLIS-SPEC-v6.md
 ---
 
-Antes de produzir um pacote, vale distinguir os objetos centrais do protocolo.
+Antes de validar um checkout ou produzir um pacote para outro consumidor, vale distinguir os objetos centrais do protocolo.
 
 ## Glossário
 
@@ -20,6 +20,7 @@ Antes de produzir um pacote, vale distinguir os objetos centrais do protocolo.
 | **Green-to-Green** | Caracterização que permanece aprovada antes e depois de uma mudança preservadora de comportamento. |
 | **Evidence** | Registros estruturados e limitados de comandos, provas e decisões de validação. |
 | **Gate** | Verificação específica configurada pela política, com dependências e estado explícitos. |
+| **Workspace checkpoint** | Relatório externo da validação local, vinculado a identidades observadas e sem pacote de entrega. |
 | **`.polis`** | Pacote de entrega verificável, diferente do kit offline do runtime. |
 | **Preflight** | Validação do pacote no ambiente consumidor, sem aplicar a mudança. |
 

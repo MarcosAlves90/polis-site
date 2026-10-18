@@ -2,8 +2,8 @@
 title: Aplicação segura
 description: Entenda o preflight, a revalidação em apply e os modos explícitos de commit no consumidor.
 group: Fluxo de entrega
-order: 5
-source: docs/usage.md
+order: 7
+source: docs/commands.md
 ---
 
 O consumidor precisa verificar a entrega **no próprio estado Git e ambiente**. Um PASS obtido pelo produtor ou por um preflight anterior não é uma autorização permanente para alterar arquivos.

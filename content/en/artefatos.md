@@ -3,15 +3,15 @@ slug: artifacts-and-verification
 title: Artifacts and verification
 description: Understand .polis packages, V6 formats, inspection, and detached digital signatures.
 group: Fluxo de entrega
-order: 4
-source: spec/POLIS-SPEC-v6.md
+order: 6
+source: docs/artifact-trust.md
 ---
 
 A `.polis` file is the output of a validated delivery. It packages the change, contracts, and evidence required for verification and consumption within the specification's schemas and size limits.
 
 ## Build a delivery package
 
-The producer uses `polis build` only after locking a baseline and satisfying mandatory development proof. Then check the resulting artifact independently:
+The producer uses `polis build` to hand off changes **to a different checkout**, after locking a baseline and satisfying mandatory development proof. `--out` must resolve physically outside the repository. The command reports the actual generated filename; paths below are illustrative:
 
 ```bash
 polis verify /outside/output/artifact.polis
@@ -19,6 +19,8 @@ polis inspect --format json /outside/output/artifact.polis
 ```
 
 `verify` checks package bytes, required members, checksums, schemas, and supported proof consistency. `inspect` exposes validated metadata without applying the change.
+
+Since `v6.12.0`, the producer checks the final file's SHA-256 and identity and restricts cleanup to the originally created file. External processes with filesystem access can still move or modify the output **after** the final check. Protect the external directory and verify transferred bytes. New delivery packages are never retained in `.polis/artifacts/packages/`, even when retention of other evidence is enabled.
 
 ## Package formats in POLIS V6
 

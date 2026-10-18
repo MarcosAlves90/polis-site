@@ -2,15 +2,15 @@
 title: Artefatos e verificação
 description: Conheça o pacote .polis, os formatos V6, a inspeção e o papel das assinaturas destacadas.
 group: Fluxo de entrega
-order: 4
-source: spec/POLIS-SPEC-v6.md
+order: 6
+source: docs/artifact-trust.md
 ---
 
 O arquivo `.polis` é o produto de uma entrega validada. Ele reúne a mudança, os contratos e a evidência necessária para verificação e consumo, dentro de limites e esquemas definidos pela especificação.
 
 ## Criar um pacote
 
-O produtor usa `polis build` somente depois de bloquear a base e cumprir as provas obrigatórias de desenvolvimento. Um pacote pode então ser validado de forma independente:
+O produtor usa `polis build` somente para entregar mudanças a **outro checkout**, depois de bloquear a base e cumprir as provas obrigatórias de desenvolvimento. `--out` exige diretório fisicamente externo ao repositório. O comando retorna o nome real do pacote criado; os nomes abaixo são ilustrativos:
 
 ```bash
 polis verify /outside/output/artifact.polis
@@ -18,6 +18,8 @@ polis inspect --format json /outside/output/artifact.polis
 ```
 
 `verify` verifica os bytes, os membros obrigatórios, os checksums, schemas e consistência das provas suportadas. `inspect` expõe metadados validados; não aplica a mudança.
+
+Desde `v6.12.0`, o produtor confere SHA-256 e identidade do arquivo final e restringe a limpeza ao arquivo originalmente criado. Processos externos com acesso ao sistema de arquivos ainda podem modificar ou mover o resultado **depois** da última conferência. Proteja o diretório externo e verifique os bytes transferidos. Novos pacotes não são retidos em `.polis/artifacts/packages/`, mesmo quando a retenção de outros tipos de evidência está habilitada.
 
 ## Formatos no POLIS V6
 

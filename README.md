@@ -126,7 +126,10 @@ commit-message hook applies the same subject check before a commit is created.
 - No remote search provider, analytics dependency, user accounts, database, or third-party hosted fonts are required.
 - The original nautical cover is optimized as `assets/cover-art.webp`, used as a subtle decorative hero/background element and as the source of the localized OG images. The colors draw on deep ocean blue, stone, brass, and lighthouse teal.
 
-**Sources:** POLIS V6 README, `docs/usage.md`, `docs/installation.md`, `spec/POLIS-SPEC-v6.md`, and
+**Sources:** POLIS V6 README, `docs/quickstart.md`, `docs/commands.md`,
+`docs/workflows/local-agent-workspace.md`, `docs/workflows/web-agent-delivery.md`,
+`docs/gates-and-progress.md`, `docs/policy-and-validation.md`, `docs/retention.md`,
+`docs/installation.md`, `spec/POLIS-SPEC-v6.md`, and
 `spec/POLIS-OFFLINE.md`. The official [V6 Specification](https://github.com/MarcosAlves90/polis/blob/main/spec/POLIS-SPEC-v6.md)
 is authoritative whenever this website and the normative specification differ. The POLIS repository was
-consulted for the original site on October 12, 2026.
+rechecked against POLIS `v6.12.0` (`origin/main` at `12a2f71`) on October 18, 2026.

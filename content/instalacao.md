@@ -30,10 +30,10 @@ polis doctor
 Para instalar uma versão fixa e reproduzível, substitua `@latest` por uma tag do módulo V6:
 
 ```bash
-go install github.com/MarcosAlves90/polis/v6/cmd/polis@v6.11.1
+go install github.com/MarcosAlves90/polis/v6/cmd/polis@v6.12.0
 ```
 
-> A tag mostrada é um exemplo documentado no README consultado, não uma afirmação de que seja a versão mais recente no momento da sua instalação. Confira a página de releases.
+> `v6.12.0` é a release estável confirmada em 18 de outubro de 2026. Para versões posteriores, consulte [GitHub Releases](https://github.com/MarcosAlves90/polis/releases/latest).
 
 ## Configurar o PATH
 
@@ -70,7 +70,7 @@ polis doctor
 
 ## Alternativa: runtime offline
 
-O kit offline não exige Go para **executar o POLIS**. Baixe o arquivo `polis-<tag>-offline-<GOOS>-<GOARCH>.zip` correspondente ao seu sistema e arquitetura em [GitHub Releases](https://github.com/MarcosAlves90/polis/releases/latest), extraia e execute `bin/polis` ou `bin/polis.exe`.
+O kit offline não exige Go para **executar o POLIS**. Baixe o arquivo `polis-<tag>-offline-<GOOS>-<GOARCH>.zip` correspondente ao seu sistema e arquitetura em [GitHub Releases](https://github.com/MarcosAlves90/polis/releases/latest), extraia e execute `bin/polis` ou `bin/polis.exe`. A distribuição inclui variantes Linux amd64 e Windows amd64, além da plataforma nativa de publicação.
 
 Ele ainda exige Git, e os comandos próprios do projeto que você validar podem exigir outras ferramentas. Consulte [Execução offline](../execucao-offline/).
 

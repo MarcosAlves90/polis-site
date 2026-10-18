@@ -3,40 +3,41 @@ title: Comandos da CLI
 description: Referência prática dos principais comandos do POLIS V6, organizada por fase do fluxo.
 group: Referência
 order: 1
-source: docs/usage.md
+source: docs/commands.md
 ---
 
-Esta página reúne um índice orientado por propósito. Para parâmetros completos, use **`polis help <comando>`**, `polis <comando> --help` ou a [referência oficial de uso](https://github.com/MarcosAlves90/polis/blob/main/docs/usage.md#command-reference).
+Esta página reúne um índice orientado por propósito. Para parâmetros completos, use **`polis help <comando>`**, `polis <comando> --help` ou a [referência oficial dos comandos](https://github.com/MarcosAlves90/polis/blob/main/docs/commands.md#agent-command-instructions), também incorporada ao help da CLI.
 
 ## Descoberta e preparação
 
 | Comando | Para que serve |
 | --- | --- |
 | `help` | Mostra sintaxe e orientação operacional sem executar ações de entrega. |
-| `doctor` | Avalia dependências e ambiente da CLI. |
-| `init` | Gera uma política de projeto a partir do perfil escolhido. |
-| `plan` | Expõe a política efetiva, gates, dependências e garantias, sem executar. |
-| `status` | Resume o estado e próximo passo do fluxo a partir dos arquivos fornecidos. |
+| `doctor` | Avalia o ambiente da CLI; `--repo` acrescenta diagnóstico estático do repositório, com `--policy` opcional. |
+| `init` | Gera a política de projeto e, sem `--dry-run`, um manifesto de proveniência. |
+| `plan` | Expõe gates, garantias e origem/razão das decisões, sem executar. JSON de plano v4. |
+| `status` | Projeta provas e próximo passo a partir de entradas externas (`proven`, `stale_or_unproven`, `missing`). |
 
 ```bash
 polis help
 polis help start
 polis doctor --format json
-polis init --repo . --dry-run
-polis plan --repo .
+polis doctor --repo .
+polis init --repo . --profile auto --dry-run > /outside/policy.json
+polis plan --repo . --policy /outside/policy.json --format json
 ```
 
 ## Validação e planejamento
 
 | Comando | Para que serve |
 | --- | --- |
-| `gates` | Executa gates da Project Policy, inclusive subconjuntos ou afetados. |
-| `workspace validate` | Valida uma alteração bloqueada, sem criar pacote `.polis`. |
+| `gates` | Executa gates da Project Policy, inclusive subconjuntos ou afetados, com replay/reuso condicionado. |
+| `workspace validate` | Valida uma alteração bloqueada, sem criar pacote `.polis`; aceita `--jobs 1..16`. |
 | `workspace status` | Compara identidade de snapshot com checkpoint não autenticado. |
 | `implementation-plan` | Gera um plano opcional derivado do contrato bloqueado. |
 
 ```bash
-polis gates --repo . --affected
+polis gates --repo . --policy /outside/policy.json --affected
 polis implementation-plan --repo /repo \
   --contract /outside/locked-v6.json \
   --out /outside/implementation-plan.json
@@ -49,7 +50,7 @@ polis implementation-plan --repo /repo \
 | `start` | Bloqueia o contrato contra uma baseline e política efetiva. |
 | `check-red-scope` | Confere se arquivos de teste propostos são autorizados. |
 | `capture-red` | Captura prova Red genuína para fluxos Red-to-Green. |
-| `build` | Valida e cria um pacote verificável de mudança. |
+| `build` | Valida e cria um pacote verificável em diretório fisicamente externo, com `--jobs 1..16`. |
 
 ```bash
 polis start --repo /repo --policy /outside/policy-v3.json \

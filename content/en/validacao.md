@@ -3,8 +3,8 @@ slug: validation-and-gates
 title: Validation and gates
 description: Execute quality policies, inspect dependencies, and distinguish local checks from delivery validation.
 group: Fluxo de entrega
-order: 3
-source: docs/usage.md
+order: 5
+source: docs/gates-and-progress.md
 ---
 
 A **gate** is a Project Policy check. It may run tests, coverage, lint, or another configured command. Project Policy controls quality checks, while mandatory protocol integrity and safety invariants remain in force.
@@ -12,7 +12,7 @@ A **gate** is a Project Policy check. It may run tests, coverage, lint, or anoth
 ## Inspect before execution
 
 ```bash
-polis plan --repo .
+polis plan --repo . --policy /outside/policy.json
 ```
 
 `plan` does not execute gates. It lists execution order, commands, dependencies, enabled gates, and the guarantees or limits of the effective policy.
@@ -20,14 +20,14 @@ polis plan --repo .
 ## Run local validation
 
 ```bash
-polis gates --repo .
+polis gates --repo . --policy /outside/policy.json
 ```
 
 To run selected checks or only those affected by Git changes:
 
 ```bash
-polis gates --repo . --gate lint --gate coverage
-polis gates --repo . --affected
+polis gates --repo . --policy /outside/policy.json --gate lint --gate coverage
+polis gates --repo . --policy /outside/policy.json --affected
 ```
 
 Required dependencies are added automatically. `--jobs` accepts 1 through 16; gates overlap only when explicitly marked `parallel_safe`. Coverage remains exclusive.
@@ -40,15 +40,23 @@ A run can produce a result manifest. POLIS lets you inspect it, conditionally re
 
 ```bash
 polis gates --repo . --environment-id toolchain-v1 \
-  --out-run /outside/first.json
+  --policy /outside/policy.json --out-run /outside/first.json
 
 polis gates --inspect-run /outside/first.json
 
 polis gates --repo . --environment-id toolchain-v1 \
-  --reuse /outside/first.json
+  --policy /outside/policy.json --reuse /outside/first.json
 ```
 
 The environment identifier is **operator asserted**: it does not establish a hermetic environment or verify that external conditions really match. Reuse is disabled without an identifier. Previous results do not prove a modified repository state.
+
+By default, reuse requires global source, Git/index, policy, dependency, and environment identities to match. **Command** gates with exhaustive `input_paths` and `input_paths_complete: true` can opt into input-scoped reuse, including ignored files, empty directories, and directory topology. That declaration cannot prove the command does not read other inputs; coverage remains globally bound. Omitted or reused gates do not replace full `build` or `apply` validation.
+
+To rerun a previous selection, use `polis gates --repo . --policy /outside/policy.json --replay /outside/first.json --environment-id toolchain-v1` with the original policy. Do not combine replay with `--affected`, `--gate`, `--jobs`, or `--reuse`.
+
+## Follow command progress
+
+With `--format json`, executing commands and gates emit `started` and `completed` **JSON Lines on stderr** while the ordinary JSON result remains on stdout. Lifecycle events report the action, reason, scope, ID, result, and completion duration. Reused or skipped gates do not emit execution events; inspect final outcomes instead. On JSON failures, the structured error is the final non-progress stderr record.
 
 ## PASS, FAIL, BLOCKED, and DEFERRED
 

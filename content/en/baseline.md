@@ -4,7 +4,7 @@ title: Baseline modes
 description: How strict, compatible, and permissive govern package admission against different Git states.
 group: Conceitos e segurança
 order: 3
-source: docs/usage.md
+source: docs/development-proof.md
 ---
 
 A package is built from a locked Git baseline. Consumers may have the same or a different commit; POLIS requires an explicit policy for handling that difference.
